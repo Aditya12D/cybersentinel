@@ -1,22 +1,18 @@
-# Datasets (never commit)
+.venv/
+venv/
 data/
-
-# Generated model binaries
-models/*.joblib
-models/*.pkl
-
-# Generated outputs that are large or regenerable
-outputs/*.png
+__pycache__/
+*.pyc
+.DS_Store
+catboost_info/
+.pytest_cache/
+.ipynb_checkpoints/
 
 # Environments / secrets
 .env
 .env.*
-.venv/
-venv/
 *.key
 
-# Python
-__pycache__/
-*.pyc
-.pytest_cache/
-.ipynb_checkpoints/
+# Agent 2 (anomaly detection): regenerable model binary and plot
+models/anomaly_detector.joblib
+outputs/*.png
