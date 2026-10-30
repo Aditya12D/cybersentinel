@@ -1,0 +1,335 @@
+{
+  "model_version": "agent2-knn-iforest-1.1",
+  "threshold": 0.97,
+  "operating_points": {
+    "strict": 0.99,
+    "balanced": 0.97,
+    "sensitive": 0.97
+  },
+  "score_semantics": "anomaly_score = fraction of held-out benign reference flows with a lower-or-equal fused score; not an attack probability",
+  "holdout": {
+    "n": 57093,
+    "threshold": 0.97,
+    "precision": 0.967968328234659,
+    "recall": 0.9927284807323195,
+    "f1": 0.9801920658928148,
+    "false_positive_rate": 0.029665677810739643,
+    "accuracy": 0.9809608883751073,
+    "confusion_matrix": {
+      "tn": 29111,
+      "fp": 890,
+      "fn": 197,
+      "tp": 26895
+    },
+    "roc_auc": 0.9894461814361589,
+    "average_precision": 0.9692478804174834,
+    "per_class": {
+      "BENIGN": {
+        "n": 30001,
+        "flagged": 890,
+        "flag_rate": 0.029665677810739643
+      },
+      "BRUTE_FORCE": {
+        "n": 692,
+        "flagged": 689,
+        "flag_rate": 0.9956647398843931
+      },
+      "DOS": {
+        "n": 12000,
+        "flagged": 11806,
+        "flag_rate": 0.9838333333333333
+      },
+      "DDOS": {
+        "n": 7200,
+        "flagged": 7200,
+        "flag_rate": 1.0
+      },
+      "PORT_SCAN": {
+        "n": 7200,
+        "flagged": 7200,
+        "flag_rate": 1.0
+      }
+    }
+  },
+  "full_eval": {
+    "n": 114185,
+    "threshold": 0.97,
+    "precision": 0.9689971357028336,
+    "recall": 0.9927284807323195,
+    "f1": 0.9807192670586626,
+    "false_positive_rate": 0.028682855285745237,
+    "accuracy": 0.9814774269825284,
+    "confusion_matrix": {
+      "tn": 58280,
+      "fp": 1721,
+      "fn": 394,
+      "tp": 53790
+    },
+    "roc_auc": 0.989587878085294,
+    "average_precision": 0.9689315832844357,
+    "per_class": {
+      "BENIGN": {
+        "n": 60001,
+        "flagged": 1721,
+        "flag_rate": 0.028682855285745237
+      },
+      "BRUTE_FORCE": {
+        "n": 1384,
+        "flagged": 1379,
+        "flag_rate": 0.9963872832369942
+      },
+      "DOS": {
+        "n": 24000,
+        "flagged": 23611,
+        "flag_rate": 0.9837916666666666
+      },
+      "DDOS": {
+        "n": 14400,
+        "flagged": 14400,
+        "flag_rate": 1.0
+      },
+      "PORT_SCAN": {
+        "n": 14400,
+        "flagged": 14400,
+        "flag_rate": 1.0
+      }
+    }
+  },
+  "holdout_excluding_train_duplicates": {
+    "n_excluded": 4927,
+    "n": 52166,
+    "threshold": 0.97,
+    "precision": 0.9643287055613514,
+    "recall": 0.9918695831613702,
+    "f1": 0.9779052734375,
+    "false_positive_rate": 0.031822737686139746,
+    "accuracy": 0.9791818425794578,
+    "confusion_matrix": {
+      "tn": 27047,
+      "fp": 889,
+      "fn": 197,
+      "tp": 24033
+    },
+    "roc_auc": 0.9882181026710897,
+    "average_precision": 0.9650048825367786,
+    "per_class": {
+      "BENIGN": {
+        "n": 27936,
+        "flagged": 889,
+        "flag_rate": 0.031822737686139746
+      },
+      "BRUTE_FORCE": {
+        "n": 692,
+        "flagged": 689,
+        "flag_rate": 0.9956647398843931
+      },
+      "DOS": {
+        "n": 11965,
+        "flagged": 11771,
+        "flag_rate": 0.9837860426243209
+      },
+      "DDOS": {
+        "n": 7200,
+        "flagged": 7200,
+        "flag_rate": 1.0
+      },
+      "PORT_SCAN": {
+        "n": 4373,
+        "flagged": 4373,
+        "flag_rate": 1.0
+      }
+    }
+  },
+  "threshold_comparison_holdout": [
+    {
+      "threshold": 0.9,
+      "precision": 0.9023049763506762,
+      "recall": 0.9998892662040455,
+      "f1": 0.9485940399901951,
+      "false_positive_rate": 0.09776340788640378,
+      "accuracy": 0.9485751318024976,
+      "recall_BRUTE_FORCE": 0.9985549132947977,
+      "recall_DOS": 0.9998333333333334,
+      "recall_DDOS": 1.0,
+      "recall_PORT_SCAN": 1.0
+    },
+    {
+      "threshold": 0.95,
+      "precision": 0.947666888367697,
+      "recall": 0.9992617746936365,
+      "f1": 0.972780682369428,
+      "false_positive_rate": 0.04983167227759075,
+      "accuracy": 0.9734643476433188,
+      "recall_BRUTE_FORCE": 0.9985549132947977,
+      "recall_DOS": 0.9984166666666666,
+      "recall_DDOS": 1.0,
+      "recall_PORT_SCAN": 1.0
+    },
+    {
+      "threshold": 0.96,
+      "precision": 0.9585341650127587,
+      "recall": 0.998302081795364,
+      "f1": 0.9780140305199971,
+      "false_positive_rate": 0.03899870004333189,
+      "accuracy": 0.9787014169863205,
+      "recall_BRUTE_FORCE": 0.9971098265895953,
+      "recall_DOS": 0.9963333333333333,
+      "recall_DDOS": 1.0,
+      "recall_PORT_SCAN": 1.0
+    },
+    {
+      "threshold": 0.97,
+      "precision": 0.967968328234659,
+      "recall": 0.9927284807323195,
+      "f1": 0.9801920658928148,
+      "false_positive_rate": 0.029665677810739643,
+      "accuracy": 0.9809608883751073,
+      "recall_BRUTE_FORCE": 0.9956647398843931,
+      "recall_DOS": 0.9838333333333333,
+      "recall_DDOS": 1.0,
+      "recall_PORT_SCAN": 1.0
+    },
+    {
+      "threshold": 0.98,
+      "precision": 0.9773124602670057,
+      "recall": 0.9079063930311531,
+      "f1": 0.9413318025258323,
+      "false_positive_rate": 0.01903269891003633,
+      "accuracy": 0.9462981451316274,
+      "recall_BRUTE_FORCE": 0.6517341040462428,
+      "recall_DOS": 0.8138333333333333,
+      "recall_DDOS": 0.9972222222222222,
+      "recall_PORT_SCAN": 1.0
+    },
+    {
+      "threshold": 0.99,
+      "precision": 0.9819280901706442,
+      "recall": 0.5755942713716227,
+      "f1": 0.725758034114444,
+      "false_positive_rate": 0.009566347788407053,
+      "accuracy": 0.7935824006445624,
+      "recall_BRUTE_FORCE": 0.5679190751445087,
+      "recall_DOS": 0.27991666666666665,
+      "recall_DDOS": 0.6586111111111111,
+      "recall_PORT_SCAN": 0.9861111111111112
+    },
+    {
+      "threshold": 0.995,
+      "precision": 0.9032496307237814,
+      "recall": 0.045142477484128155,
+      "f1": 0.08598748505941081,
+      "false_positive_rate": 0.004366521115962801,
+      "accuracy": 0.5446026658259331,
+      "recall_BRUTE_FORCE": 0.12427745664739884,
+      "recall_DOS": 0.08258333333333333,
+      "recall_DDOS": 0.012222222222222223,
+      "recall_PORT_SCAN": 0.008055555555555555
+    }
+  ],
+  "score_quantiles_by_class_holdout": {
+    "BENIGN": {
+      "p1": 0.007554974961898542,
+      "p5": 0.03594600478989767,
+      "p25": 0.22582190289571086,
+      "p50": 0.4824297844546048,
+      "p75": 0.7393642499455694
+    },
+    "BRUTE_FORCE": {
+      "p1": 0.9729113868930982,
+      "p5": 0.9754408883082952,
+      "p25": 0.9784890050076203,
+      "p50": 0.9946875680383191,
+      "p75": 0.9948835183975615
+    },
+    "DOS": {
+      "p1": 0.9673416067929458,
+      "p5": 0.9740039190071849,
+      "p25": 0.9818419333768779,
+      "p50": 0.986131069018071,
+      "p75": 0.9906161550185064
+    },
+    "DDOS": {
+      "p1": 0.9821243196168082,
+      "p5": 0.985543217940344,
+      "p25": 0.9890866536033094,
+      "p50": 0.991008055736991,
+      "p75": 0.9925974308730677
+    },
+    "PORT_SCAN": {
+      "p1": 0.9898758981058132,
+      "p5": 0.9904202046592641,
+      "p25": 0.9904637491835402,
+      "p50": 0.9940997169605922,
+      "p75": 0.9941868060091443
+    }
+  },
+  "calibration": {
+    "rule": "max F1 s.t. benign FPR <= 0.03",
+    "n_calibration": 57092,
+    "threshold": 0.97,
+    "operating_points": {
+      "strict": {
+        "threshold": 0.99,
+        "precision": 0.982267964535929,
+        "recall": 0.5847851764358483,
+        "f1": 0.7331158464635247,
+        "false_positive_rate": 0.009533333333333333,
+        "accuracy": 0.7979576823372801,
+        "tn": 29714.0,
+        "fp": 286.0,
+        "fn": 11249.0,
+        "tp": 15843.0,
+        "recall_BRUTE_FORCE": 0.6098265895953757,
+        "recall_DOS": 0.2891666666666667,
+        "recall_DDOS": 0.6708333333333333,
+        "recall_PORT_SCAN": 0.9890277777777777
+      },
+      "balanced": {
+        "threshold": 0.97,
+        "precision": 0.9700281324388661,
+        "recall": 0.9927284807323195,
+        "f1": 0.9812470356452261,
+        "false_positive_rate": 0.0277,
+        "accuracy": 0.9819939746374273,
+        "tn": 29169.0,
+        "fp": 831.0,
+        "fn": 197.0,
+        "tp": 26895.0,
+        "recall_BRUTE_FORCE": 0.9971098265895953,
+        "recall_DOS": 0.98375,
+        "recall_DDOS": 1.0,
+        "recall_PORT_SCAN": 1.0
+      },
+      "sensitive": {
+        "threshold": 0.97,
+        "precision": 0.9700281324388661,
+        "recall": 0.9927284807323195,
+        "f1": 0.9812470356452261,
+        "false_positive_rate": 0.0277,
+        "accuracy": 0.9819939746374273,
+        "tn": 29169.0,
+        "fp": 831.0,
+        "fn": 197.0,
+        "tp": 26895.0,
+        "recall_BRUTE_FORCE": 0.9971098265895953,
+        "recall_DOS": 0.98375,
+        "recall_DDOS": 1.0,
+        "recall_PORT_SCAN": 1.0
+      }
+    },
+    "share_within_0.005_of_threshold": {
+      "BENIGN": 0.009466666666666667,
+      "BRUTE_FORCE": 0.014450867052023121,
+      "DOS": 0.058083333333333334,
+      "DDOS": 0.0,
+      "PORT_SCAN": 0.0
+    },
+    "median_score_by_class": {
+      "BENIGN": 0.48011103853690396,
+      "BRUTE_FORCE": 0.9947528848247333,
+      "DOS": 0.9863052471151753,
+      "DDOS": 0.9910733725234052,
+      "PORT_SCAN": 0.9940997169605922
+    }
+  }
+}

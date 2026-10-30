@@ -1,0 +1,325 @@
+{
+  "threshold": 0.97,
+  "false_positives_by_port": [
+    {
+      "port": 53,
+      "benign_n": 18472,
+      "share_of_benign": 0.6157128095730142,
+      "fp": 15,
+      "fpr": 0.00081203984408835,
+      "share_of_fp": 0.016853932584269662
+    },
+    {
+      "port": 443,
+      "benign_n": 6939,
+      "share_of_benign": 0.23129229025699144,
+      "fp": 593,
+      "fpr": 0.08545899985588702,
+      "share_of_fp": 0.6662921348314607
+    },
+    {
+      "port": 80,
+      "benign_n": 3305,
+      "share_of_benign": 0.11016299456684778,
+      "fp": 216,
+      "fpr": 0.06535552193645991,
+      "share_of_fp": 0.24269662921348314
+    },
+    {
+      "port": 123,
+      "benign_n": 470,
+      "share_of_benign": 0.015666144461851272,
+      "fp": 8,
+      "fpr": 0.01702127659574468,
+      "share_of_fp": 0.008988764044943821
+    },
+    {
+      "port": 137,
+      "benign_n": 163,
+      "share_of_benign": 0.005433152228259058,
+      "fp": 2,
+      "fpr": 0.012269938650306749,
+      "share_of_fp": 0.0022471910112359553
+    },
+    {
+      "port": 389,
+      "benign_n": 93,
+      "share_of_benign": 0.003099896670110996,
+      "fp": 17,
+      "fpr": 0.1827956989247312,
+      "share_of_fp": 0.019101123595505618
+    },
+    {
+      "port": 22,
+      "benign_n": 85,
+      "share_of_benign": 0.0028332388920369322,
+      "fp": 1,
+      "fpr": 0.011764705882352941,
+      "share_of_fp": 0.0011235955056179776
+    },
+    {
+      "port": 88,
+      "benign_n": 72,
+      "share_of_benign": 0.0023999200026665777,
+      "fp": 2,
+      "fpr": 0.027777777777777776,
+      "share_of_fp": 0.0022471910112359553
+    },
+    {
+      "port": 21,
+      "benign_n": 54,
+      "share_of_benign": 0.0017999400019999333,
+      "fp": 1,
+      "fpr": 0.018518518518518517,
+      "share_of_fp": 0.0011235955056179776
+    },
+    {
+      "port": 3268,
+      "benign_n": 40,
+      "share_of_benign": 0.001333288890370321,
+      "fp": 0,
+      "fpr": 0.0,
+      "share_of_fp": 0.0
+    },
+    {
+      "port": 139,
+      "benign_n": 34,
+      "share_of_benign": 0.0011332955568147728,
+      "fp": 2,
+      "fpr": 0.058823529411764705,
+      "share_of_fp": 0.0022471910112359553
+    },
+    {
+      "port": 465,
+      "benign_n": 31,
+      "share_of_benign": 0.0010332988900369987,
+      "fp": 0,
+      "fpr": 0.0,
+      "share_of_fp": 0.0
+    }
+  ],
+  "fp_member": {
+    "knn": 432,
+    "joint_only": 221,
+    "iforest": 92,
+    "both": 145
+  },
+  "https": {
+    "n_fp": 593,
+    "n_tn": 6346,
+    "fpr": 0.08545899985588702,
+    "member_of_fp": {
+      "knn": 289,
+      "joint_only": 146,
+      "iforest": 64,
+      "both": 94
+    },
+    "median_fp": {
+      "Flow Duration": 61624840.0,
+      "Total Fwd Packets": 33.0,
+      "Total Backward Packets": 39.0,
+      "Total Length of Fwd Packets": 2398.0,
+      "Total Length of Bwd Packets": 16277.0,
+      "Flow Bytes/s": 1310.6690673828125,
+      "Flow Packets/s": 2.618042230606079,
+      "Flow IAT Max": 10019751.0,
+      "Packet Length Mean": 477.8629150390625,
+      "Init_Win_bytes_forward": 8192.0,
+      "Init_Win_bytes_backward": 374.0,
+      "FIN Flag Count": 1.0,
+      "RST Flag Count": 0.0,
+      "PSH Flag Count": 16.0,
+      "Active Mean": 202317.0,
+      "Idle Mean": 9995568.0
+    },
+    "median_tn": {
+      "Flow Duration": 5840344.0,
+      "Total Fwd Packets": 12.0,
+      "Total Backward Packets": 11.0,
+      "Total Length of Fwd Packets": 801.0,
+      "Total Length of Bwd Packets": 4404.0,
+      "Flow Bytes/s": 510.8480224609375,
+      "Flow Packets/s": 2.591557502746582,
+      "Flow IAT Max": 5373503.0,
+      "Packet Length Mean": 228.02273559570312,
+      "Init_Win_bytes_forward": 8192.0,
+      "Init_Win_bytes_backward": 152.0,
+      "FIN Flag Count": 2.0,
+      "RST Flag Count": 0.0,
+      "PSH Flag Count": 7.0,
+      "Active Mean": 50880.8359375,
+      "Idle Mean": 5372458.0
+    },
+    "top_evidence_fp": [
+      [
+        "Down/Up Ratio",
+        222
+      ],
+      [
+        "Fwd Packet Length Mean",
+        168
+      ],
+      [
+        "act_data_pkt_fwd",
+        107
+      ],
+      [
+        "Total Backward Packets",
+        78
+      ],
+      [
+        "RST Flag Count",
+        64
+      ],
+      [
+        "Init_Win_bytes_backward",
+        52
+      ]
+    ],
+    "fp_severity_counts": {
+      "low": 530,
+      "info": 1681,
+      "medium": 502,
+      "high": 119
+    },
+    "fp_flow_duration_ge_100s": 0.33558178752107926,
+    "tn_flow_duration_ge_100s": 0.21572644185313583
+  },
+  "port_443_suppression_check": {
+    "attack_flows_on_443_in_holdout": 8,
+    "top_ports_per_attack_class": {
+      "BRUTE_FORCE": [
+        21,
+        22
+      ],
+      "DOS": [
+        80
+      ],
+      "DDOS": [
+        80
+      ],
+      "PORT_SCAN": [
+        80,
+        1863,
+        3801
+      ]
+    },
+    "fp_removed_if_443_suppressed": 593,
+    "conclusion": "The eval data contains (almost) no attacks on port 443, so suppressing 443 would look free on this data while blinding the agent to any HTTPS-borne attack in the replay; the data provides no evidence that 443 traffic is safe, so no port-based suppression is applied."
+  },
+  "missed_attacks": {
+    "BRUTE_FORCE": {
+      "n_missed": 3,
+      "n": 692,
+      "median_missed": {
+        "Flow Duration": 5779168.0,
+        "Total Fwd Packets": 15.0,
+        "Total Backward Packets": 16.0,
+        "Total Length of Fwd Packets": 1304.0,
+        "Total Length of Bwd Packets": 2153.0,
+        "Flow Bytes/s": 653.5542602539062,
+        "Flow Packets/s": 6.2292704582214355,
+        "Flow IAT Max": 2158823.0,
+        "Packet Length Mean": 111.51612854003906,
+        "Init_Win_bytes_forward": 29200.0,
+        "Init_Win_bytes_backward": 247.0,
+        "FIN Flag Count": 2.0,
+        "RST Flag Count": 0.0,
+        "PSH Flag Count": 15.0,
+        "Active Mean": 0.0,
+        "Idle Mean": 0.0
+      },
+      "median_detected": {
+        "Flow Duration": 9678410.0,
+        "Total Fwd Packets": 11.0,
+        "Total Backward Packets": 17.0,
+        "Total Length of Fwd Packets": 127.0,
+        "Total Length of Bwd Packets": 188.0,
+        "Flow Bytes/s": 36.69574737548828,
+        "Flow Packets/s": 3.3228304386138916,
+        "Flow IAT Max": 3019941.0,
+        "Packet Length Mean": 11.25,
+        "Init_Win_bytes_forward": 29200.0,
+        "Init_Win_bytes_backward": 0.0,
+        "FIN Flag Count": 2.0,
+        "RST Flag Count": 2.0,
+        "PSH Flag Count": 14.0,
+        "Active Mean": 0.0,
+        "Idle Mean": 0.0
+      },
+      "missed_score_quantiles": {
+        "p5": 0.8598824297844546,
+        "p50": 0.9595035924232528,
+        "p95": 0.9631678641410842
+      },
+      "missed_knn_pct_median": 0.984955366862617,
+      "missed_iforest_pct_median": 0.8414761593729588,
+      "share_duration_gt_5s": 0.6666666666666666,
+      "share_packet_rate_lt_2": 0.3333333333333333,
+      "share_rst_zero": 1.0,
+      "detected_share_duration_gt_5s": 0.9985486211901307
+    },
+    "DOS": {
+      "n_missed": 194,
+      "n": 12000,
+      "median_missed": {
+        "Flow Duration": 594991.0,
+        "Total Fwd Packets": 8.0,
+        "Total Backward Packets": 7.0,
+        "Total Length of Fwd Packets": 622.0,
+        "Total Length of Bwd Packets": 11595.0,
+        "Flow Bytes/s": 21159.12890625,
+        "Flow Packets/s": 27.445785522460938,
+        "Flow IAT Max": 216003.0,
+        "Packet Length Mean": 721.6470947265625,
+        "Init_Win_bytes_forward": 29200.0,
+        "Init_Win_bytes_backward": 235.0,
+        "FIN Flag Count": 2.0,
+        "RST Flag Count": 2.0,
+        "PSH Flag Count": 3.0,
+        "Active Mean": 0.0,
+        "Idle Mean": 0.0
+      },
+      "median_detected": {
+        "Flow Duration": 164016.5,
+        "Total Fwd Packets": 8.0,
+        "Total Backward Packets": 6.0,
+        "Total Length of Fwd Packets": 353.0,
+        "Total Length of Bwd Packets": 11595.0,
+        "Flow Bytes/s": 72624.5,
+        "Flow Packets/s": 82.7935791015625,
+        "Flow IAT Max": 135251.0,
+        "Packet Length Mean": 852.0,
+        "Init_Win_bytes_forward": 29200.0,
+        "Init_Win_bytes_backward": 235.0,
+        "FIN Flag Count": 1.0,
+        "RST Flag Count": 2.0,
+        "PSH Flag Count": 2.0,
+        "Active Mean": 0.0,
+        "Idle Mean": 0.0
+      },
+      "missed_score_quantiles": {
+        "p5": 0.9210374482908774,
+        "p50": 0.9659372958850425,
+        "p95": 0.9693250598737209
+      },
+      "missed_knn_pct_median": 0.9848465055519269,
+      "missed_iforest_pct_median": 0.8647071630742434,
+      "share_duration_gt_5s": 0.4329896907216495,
+      "share_packet_rate_lt_2": 0.3917525773195876,
+      "share_rst_zero": 0.3711340206185567,
+      "detected_share_duration_gt_5s": 0.09029307131966796
+    },
+    "DDOS": {
+      "n_missed": 0
+    },
+    "PORT_SCAN": {
+      "n_missed": 0
+    }
+  },
+  "benign_slow_long_flows": {
+    "n": 6184,
+    "share_of_benign": 0.20612646245125166,
+    "fpr_within": 0.06452134540750323
+  }
+}

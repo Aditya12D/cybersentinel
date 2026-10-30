@@ -1,0 +1,800 @@
+[
+  {
+    "record_id": "C478784",
+    "anomaly_score": 0.815632,
+    "is_anomaly": false,
+    "evidence": [],
+    "reason": "Anomaly score 0.816: more unusual than 81.6% of benign reference flows (threshold 0.970). The flow is consistent with normal benign traffic.",
+    "rationale": "Anomaly score 0.816: more unusual than 81.6% of benign reference flows (threshold 0.970). The flow is consistent with normal benign traffic.",
+    "threshold": 0.97,
+    "components": {
+      "knn_benign_percentile": 0.904529,
+      "isolation_forest_benign_percentile": 0.665883
+    },
+    "data_quality": {
+      "missing_features": [],
+      "invalid_features": [],
+      "non_finite_features": [],
+      "imputed_model_features": [],
+      "reliable": true
+    },
+    "agent": "anomaly_detection",
+    "schema_version": "1.1",
+    "model_version": "agent2-knn-iforest-1.1"
+  },
+  {
+    "record_id": "C541054",
+    "anomaly_score": 0.420052,
+    "is_anomaly": false,
+    "evidence": [],
+    "reason": "Anomaly score 0.420: more unusual than 42.0% of benign reference flows (threshold 0.970). The flow is consistent with normal benign traffic.",
+    "rationale": "Anomaly score 0.420: more unusual than 42.0% of benign reference flows (threshold 0.970). The flow is consistent with normal benign traffic.",
+    "threshold": 0.97,
+    "components": {
+      "knn_benign_percentile": 0.564881,
+      "isolation_forest_benign_percentile": 0.208731
+    },
+    "data_quality": {
+      "missing_features": [],
+      "invalid_features": [],
+      "non_finite_features": [],
+      "imputed_model_features": [],
+      "reliable": true
+    },
+    "agent": "anomaly_detection",
+    "schema_version": "1.1",
+    "model_version": "agent2-knn-iforest-1.1"
+  },
+  {
+    "record_id": "C289947",
+    "anomaly_score": 0.994775,
+    "is_anomaly": true,
+    "evidence": [
+      {
+        "feature": "RST Flag Count",
+        "observed_value": 2.0,
+        "reference": "Above benign reference range: only 3.93% of benign flows have a value this high or higher (benign median 0, 1st-99th percentile 0-3)",
+        "severity": "low",
+        "direction": "above",
+        "benign_tail_probability": 0.039277,
+        "benign_median": 0.0,
+        "benign_p01": 0.0,
+        "benign_p99": 3.0,
+        "nearest_benign_range": [
+          0.0,
+          0.0
+        ],
+        "distance_contribution": 0.4049
+      },
+      {
+        "feature": "Down/Up Ratio",
+        "observed_value": 1.545454502105713,
+        "reference": "Above benign reference range: only 1.21% of benign flows have a value this high or higher (benign median 1, 1st-99th percentile 0.5-1.6)",
+        "severity": "low",
+        "direction": "above",
+        "benign_tail_probability": 0.012127,
+        "benign_median": 1.0,
+        "benign_p01": 0.5,
+        "benign_p99": 1.600000023841858,
+        "nearest_benign_range": [
+          1.4,
+          1.4
+        ],
+        "distance_contribution": 0.1745
+      },
+      {
+        "feature": "Bwd Avg Bytes/Bulk",
+        "observed_value": 0.0,
+        "reference": "Within benign range (benign median 0, 1st-99th percentile 0-63,305); accounts for 7% of the distance to the 5 most similar benign flows (their values: 92)",
+        "severity": "info",
+        "direction": "below",
+        "benign_tail_probability": 0.895188,
+        "benign_median": 0.0,
+        "benign_p01": 0.0,
+        "benign_p99": 63305.0,
+        "nearest_benign_range": [
+          92.0,
+          92.0
+        ],
+        "distance_contribution": 0.0702
+      },
+      {
+        "feature": "Init_Win_bytes_backward",
+        "observed_value": 0.0,
+        "reference": "Within benign range (benign median 0, 1st-99th percentile 0-31,088); accounts for 7% of the distance to the 5 most similar benign flows (their values: 229)",
+        "severity": "info",
+        "direction": "below",
+        "benign_tail_probability": 0.652166,
+        "benign_median": 0.0,
+        "benign_p01": 0.0,
+        "benign_p99": 31088.0,
+        "nearest_benign_range": [
+          229.0,
+          229.0
+        ],
+        "distance_contribution": 0.0658
+      },
+      {
+        "feature": "Flow Bytes/s",
+        "observed_value": 36.117652893066406,
+        "reference": "Within benign range (benign median 4,549, 1st-99th percentile 0-2.57e+06); accounts for 6% of the distance to the 5 most similar benign flows (their values: 1,915.68 to 4,184.01)",
+        "severity": "info",
+        "direction": "below",
+        "benign_tail_probability": 0.108861,
+        "benign_median": 4548.9990234375,
+        "benign_p01": 0.0,
+        "benign_p99": 2574712.75,
+        "nearest_benign_range": [
+          1915.68,
+          4184.01
+        ],
+        "distance_contribution": 0.0617
+      }
+    ],
+    "reason": "Anomaly score 0.995: more unusual than 99.5% of benign reference flows (threshold 0.970). The flow is far from all similar benign flows (kNN distance at benign percentile 99.9). Main deviations: unusually high TCP flag usage (RST Flag Count); unusually high download/upload ratio (Down/Up Ratio); atypical bulk transfer size for comparable benign flows (Bwd Avg Bytes/Bulk); atypical TCP initial window size for comparable benign flows (Init_Win_bytes_backward).",
+    "rationale": "Anomaly score 0.995: more unusual than 99.5% of benign reference flows (threshold 0.970). The flow is far from all similar benign flows (kNN distance at benign percentile 99.9). Main deviations: unusually high TCP flag usage (RST Flag Count); unusually high download/upload ratio (Down/Up Ratio); atypical bulk transfer size for comparable benign flows (Bwd Avg Bytes/Bulk); atypical TCP initial window size for comparable benign flows (Init_Win_bytes_backward).",
+    "threshold": 0.97,
+    "components": {
+      "knn_benign_percentile": 0.999064,
+      "isolation_forest_benign_percentile": 0.960287
+    },
+    "data_quality": {
+      "missing_features": [],
+      "invalid_features": [],
+      "non_finite_features": [],
+      "imputed_model_features": [],
+      "reliable": true
+    },
+    "agent": "anomaly_detection",
+    "schema_version": "1.1",
+    "model_version": "agent2-knn-iforest-1.1"
+  },
+  {
+    "record_id": "C306394",
+    "anomaly_score": 0.978097,
+    "is_anomaly": true,
+    "evidence": [
+      {
+        "feature": "Down/Up Ratio",
+        "observed_value": 1.6190476417541504,
+        "reference": "Above benign reference range: only 0.96% of benign flows have a value this high or higher (benign median 1, 1st-99th percentile 0.5-1.6)",
+        "severity": "medium",
+        "direction": "above",
+        "benign_tail_probability": 0.009558,
+        "benign_median": 1.0,
+        "benign_p01": 0.5,
+        "benign_p99": 1.600000023841858,
+        "nearest_benign_range": [
+          1.35,
+          1.66667
+        ],
+        "distance_contribution": 0.2422
+      },
+      {
+        "feature": "Active Mean",
+        "observed_value": 0.0,
+        "reference": "Within benign range (benign median 0, 1st-99th percentile 0-2.67e+06); accounts for 17% of the distance to the 5 most similar benign flows (their values: 0 to 1.6e+06)",
+        "severity": "info",
+        "direction": "below",
+        "benign_tail_probability": 0.749358,
+        "benign_median": 0.0,
+        "benign_p01": 0.0,
+        "benign_p99": 2674132.0,
+        "nearest_benign_range": [
+          0.0,
+          1604190.0
+        ],
+        "distance_contribution": 0.1669
+      },
+      {
+        "feature": "Active Std",
+        "observed_value": 0.0,
+        "reference": "Within benign range (benign median 0, 1st-99th percentile 0-1.67e+06); accounts for 11% of the distance to the 5 most similar benign flows (their values: 0 to 85,736.6)",
+        "severity": "info",
+        "direction": "below",
+        "benign_tail_probability": 0.862508,
+        "benign_median": 0.0,
+        "benign_p01": 0.0,
+        "benign_p99": 1669020.375,
+        "nearest_benign_range": [
+          0.0,
+          85736.6
+        ],
+        "distance_contribution": 0.111
+      },
+      {
+        "feature": "RST Flag Count",
+        "observed_value": 0.0,
+        "reference": "Within benign range (benign median 0, 1st-99th percentile 0-3); accounts for 8% of the distance to the 5 most similar benign flows (their values: 0 to 1)",
+        "severity": "info",
+        "direction": "below",
+        "benign_tail_probability": 0.906749,
+        "benign_median": 0.0,
+        "benign_p01": 0.0,
+        "benign_p99": 3.0,
+        "nearest_benign_range": [
+          0.0,
+          1.0
+        ],
+        "distance_contribution": 0.081
+      },
+      {
+        "feature": "Fwd Packet Length Mean",
+        "observed_value": 95.61904907226562,
+        "reference": "Within benign range (benign median 43, 1st-99th percentile 0-429.9); accounts for 7% of the distance to the 5 most similar benign flows (their values: 73.63 to 188.1)",
+        "severity": "info",
+        "direction": "above",
+        "benign_tail_probability": 0.079904,
+        "benign_median": 43.0,
+        "benign_p01": 0.0,
+        "benign_p99": 429.8666687011719,
+        "nearest_benign_range": [
+          73.6316,
+          188.111
+        ],
+        "distance_contribution": 0.0724
+      }
+    ],
+    "reason": "Anomaly score 0.978: more unusual than 97.8% of benign reference flows (threshold 0.970). The flow is far from all similar benign flows (kNN distance at benign percentile 99.9). Main deviations: unusually high download/upload ratio (Down/Up Ratio); atypical active-period duration for comparable benign flows (Active Mean); atypical TCP flag usage for comparable benign flows (RST Flag Count); atypical packet size for comparable benign flows (Fwd Packet Length Mean).",
+    "rationale": "Anomaly score 0.978: more unusual than 97.8% of benign reference flows (threshold 0.970). The flow is far from all similar benign flows (kNN distance at benign percentile 99.9). Main deviations: unusually high download/upload ratio (Down/Up Ratio); atypical active-period duration for comparable benign flows (Active Mean); atypical TCP flag usage for comparable benign flows (RST Flag Count); atypical packet size for comparable benign flows (Fwd Packet Length Mean).",
+    "threshold": 0.97,
+    "components": {
+      "knn_benign_percentile": 0.998672,
+      "isolation_forest_benign_percentile": 0.893599
+    },
+    "data_quality": {
+      "missing_features": [],
+      "invalid_features": [],
+      "non_finite_features": [],
+      "imputed_model_features": [],
+      "reliable": true
+    },
+    "agent": "anomaly_detection",
+    "schema_version": "1.1",
+    "model_version": "agent2-knn-iforest-1.1"
+  },
+  {
+    "record_id": "C203197",
+    "anomaly_score": 0.992532,
+    "is_anomaly": true,
+    "evidence": [
+      {
+        "feature": "Fwd Packet Length Mean",
+        "observed_value": 2.857142925262451,
+        "reference": "Below benign reference range: only 4.59% of benign flows have a value this low or lower (benign median 43, 1st-99th percentile 0-429.9)",
+        "severity": "low",
+        "direction": "below",
+        "benign_tail_probability": 0.045896,
+        "benign_median": 43.0,
+        "benign_p01": 0.0,
+        "benign_p99": 429.8666687011719,
+        "nearest_benign_range": [
+          6.47727,
+          14.25
+        ],
+        "distance_contribution": 0.238
+      },
+      {
+        "feature": "Total Length of Fwd Packets",
+        "observed_value": 20.0,
+        "reference": "Below benign reference range: only 4.55% of benign flows have a value this low or lower (benign median 86, 1st-99th percentile 0-9,106)",
+        "severity": "low",
+        "direction": "below",
+        "benign_tail_probability": 0.045482,
+        "benign_median": 86.0,
+        "benign_p01": 0.0,
+        "benign_p99": 9106.0,
+        "nearest_benign_range": [
+          114.0,
+          303.0
+        ],
+        "distance_contribution": 0.0712
+      },
+      {
+        "feature": "RST Flag Count",
+        "observed_value": 1.0,
+        "reference": "Within benign range (benign median 0, 1st-99th percentile 0-3); accounts for 14% of the distance to the 5 most similar benign flows (their values: 0)",
+        "severity": "info",
+        "direction": "above",
+        "benign_tail_probability": 0.093251,
+        "benign_median": 0.0,
+        "benign_p01": 0.0,
+        "benign_p99": 3.0,
+        "nearest_benign_range": [
+          0.0,
+          0.0
+        ],
+        "distance_contribution": 0.1385
+      },
+      {
+        "feature": "Active Std",
+        "observed_value": 0.0,
+        "reference": "Within benign range (benign median 0, 1st-99th percentile 0-1.67e+06); accounts for 12% of the distance to the 5 most similar benign flows (their values: 0 to 41,824)",
+        "severity": "info",
+        "direction": "below",
+        "benign_tail_probability": 0.862508,
+        "benign_median": 0.0,
+        "benign_p01": 0.0,
+        "benign_p99": 1669020.375,
+        "nearest_benign_range": [
+          0.0,
+          41824.0
+        ],
+        "distance_contribution": 0.1204
+      },
+      {
+        "feature": "Total Backward Packets",
+        "observed_value": 6.0,
+        "reference": "Within benign range (benign median 2, 1st-99th percentile 1-106); accounts for 8% of the distance to the 5 most similar benign flows (their values: 7 to 41)",
+        "severity": "info",
+        "direction": "above",
+        "benign_tail_probability": 0.287416,
+        "benign_median": 2.0,
+        "benign_p01": 1.0,
+        "benign_p99": 106.0,
+        "nearest_benign_range": [
+          7.0,
+          41.0
+        ],
+        "distance_contribution": 0.0751
+      }
+    ],
+    "reason": "Anomaly score 0.993: more unusual than 99.3% of benign reference flows (threshold 0.970). The flow is far from all similar benign flows (kNN distance at benign percentile 99.9). Main deviations: unusually low packet size (Fwd Packet Length Mean); atypical TCP flag usage for comparable benign flows (RST Flag Count); atypical active-period duration for comparable benign flows (Active Std); atypical packet count for comparable benign flows (Total Backward Packets).",
+    "rationale": "Anomaly score 0.993: more unusual than 99.3% of benign reference flows (threshold 0.970). The flow is far from all similar benign flows (kNN distance at benign percentile 99.9). Main deviations: unusually low packet size (Fwd Packet Length Mean); atypical TCP flag usage for comparable benign flows (RST Flag Count); atypical active-period duration for comparable benign flows (Active Std); atypical packet count for comparable benign flows (Total Backward Packets).",
+    "threshold": 0.97,
+    "components": {
+      "knn_benign_percentile": 0.999173,
+      "isolation_forest_benign_percentile": 0.948901
+    },
+    "data_quality": {
+      "missing_features": [],
+      "invalid_features": [],
+      "non_finite_features": [],
+      "imputed_model_features": [],
+      "reliable": true
+    },
+    "agent": "anomaly_detection",
+    "schema_version": "1.1",
+    "model_version": "agent2-knn-iforest-1.1"
+  },
+  {
+    "record_id": "C157512",
+    "anomaly_score": 0.990486,
+    "is_anomaly": true,
+    "evidence": [
+      {
+        "feature": "Bwd Packet Length Std",
+        "observed_value": 3640.785400390625,
+        "reference": "Above benign reference range: only 0.00% of benign flows have a value this high or higher (benign median 0, 1st-99th percentile 0-1,110.37)",
+        "severity": "high",
+        "direction": "above",
+        "benign_tail_probability": 0.0,
+        "benign_median": 0.0,
+        "benign_p01": 0.0,
+        "benign_p99": 1110.3731689453125,
+        "nearest_benign_range": [
+          730.132,
+          1627.5
+        ],
+        "distance_contribution": 0.0016
+      },
+      {
+        "feature": "Fwd Packet Length Mean",
+        "observed_value": 2.222222328186035,
+        "reference": "Below benign reference range: only 4.57% of benign flows have a value this low or lower (benign median 43, 1st-99th percentile 0-429.9)",
+        "severity": "low",
+        "direction": "below",
+        "benign_tail_probability": 0.045744,
+        "benign_median": 43.0,
+        "benign_p01": 0.0,
+        "benign_p99": 429.8666687011719,
+        "nearest_benign_range": [
+          12.3333,
+          31.2727
+        ],
+        "distance_contribution": 0.4668
+      },
+      {
+        "feature": "Active Mean",
+        "observed_value": 1667859.0,
+        "reference": "Above benign reference range: only 1.44% of benign flows have a value this high or higher (benign median 0, 1st-99th percentile 0-2.67e+06)",
+        "severity": "low",
+        "direction": "above",
+        "benign_tail_probability": 0.014391,
+        "benign_median": 0.0,
+        "benign_p01": 0.0,
+        "benign_p99": 2674132.0,
+        "nearest_benign_range": [
+          0.0,
+          171832.0
+        ],
+        "distance_contribution": 0.1476
+      },
+      {
+        "feature": "Packet Length Mean",
+        "observed_value": 927.8571166992188,
+        "reference": "Above benign reference range: only 1.29% of benign flows have a value this high or higher (benign median 81, 1st-99th percentile 0-969.5)",
+        "severity": "low",
+        "direction": "above",
+        "benign_tail_probability": 0.012867,
+        "benign_median": 81.0,
+        "benign_p01": 0.0,
+        "benign_p99": 969.489501953125,
+        "nearest_benign_range": [
+          235.75,
+          342.0
+        ],
+        "distance_contribution": 0.0617
+      },
+      {
+        "feature": "RST Flag Count",
+        "observed_value": 1.0,
+        "reference": "Within benign range (benign median 0, 1st-99th percentile 0-3); accounts for 9% of the distance to the 5 most similar benign flows (their values: 0 to 2)",
+        "severity": "info",
+        "direction": "above",
+        "benign_tail_probability": 0.093251,
+        "benign_median": 0.0,
+        "benign_p01": 0.0,
+        "benign_p99": 3.0,
+        "nearest_benign_range": [
+          0.0,
+          2.0
+        ],
+        "distance_contribution": 0.0898
+      }
+    ],
+    "reason": "Anomaly score 0.990: more unusual than 99.0% of benign reference flows (threshold 0.970). The flow is far from all similar benign flows (kNN distance at benign percentile 100.0). Main deviations: unusually high packet size (Bwd Packet Length Std); unusually low packet size (Fwd Packet Length Mean); unusually high active-period duration (Active Mean); atypical TCP flag usage for comparable benign flows (RST Flag Count).",
+    "rationale": "Anomaly score 0.990: more unusual than 99.0% of benign reference flows (threshold 0.970). The flow is far from all similar benign flows (kNN distance at benign percentile 100.0). Main deviations: unusually high packet size (Bwd Packet Length Std); unusually low packet size (Fwd Packet Length Mean); unusually high active-period duration (Active Mean); atypical TCP flag usage for comparable benign flows (RST Flag Count).",
+    "threshold": 0.97,
+    "components": {
+      "knn_benign_percentile": 0.999543,
+      "isolation_forest_benign_percentile": 0.93943
+    },
+    "data_quality": {
+      "missing_features": [],
+      "invalid_features": [],
+      "non_finite_features": [],
+      "imputed_model_features": [],
+      "reliable": true
+    },
+    "agent": "anomaly_detection",
+    "schema_version": "1.1",
+    "model_version": "agent2-knn-iforest-1.1"
+  },
+  {
+    "record_id": "C387399",
+    "anomaly_score": 0.996233,
+    "is_anomaly": true,
+    "evidence": [
+      {
+        "feature": "Bwd Packet Length Mean",
+        "observed_value": 2898.75,
+        "reference": "Above benign reference range: only 0.00% of benign flows have a value this high or higher (benign median 116, 1st-99th percentile 0-1,604.74)",
+        "severity": "high",
+        "direction": "above",
+        "benign_tail_probability": 4.4e-05,
+        "benign_median": 116.0,
+        "benign_p01": 0.0,
+        "benign_p99": 1604.7432861328125,
+        "nearest_benign_range": [
+          725.0,
+          914.25
+        ],
+        "distance_contribution": 0.116
+      },
+      {
+        "feature": "Packet Length Mean",
+        "observed_value": 991.8333129882812,
+        "reference": "Above benign reference range: only 0.88% of benign flows have a value this high or higher (benign median 81, 1st-99th percentile 0-969.5)",
+        "severity": "medium",
+        "direction": "above",
+        "benign_tail_probability": 0.008818,
+        "benign_median": 81.0,
+        "benign_p01": 0.0,
+        "benign_p99": 969.489501953125,
+        "nearest_benign_range": [
+          283.857,
+          362.5
+        ],
+        "distance_contribution": 0.1366
+      },
+      {
+        "feature": "Down/Up Ratio",
+        "observed_value": 0.5,
+        "reference": "Within benign range (benign median 1, 1st-99th percentile 0.5-1.6); accounts for 19% of the distance to the 5 most similar benign flows (their values: 0.5556 to 0.5833)",
+        "severity": "info",
+        "direction": "below",
+        "benign_tail_probability": 0.075114,
+        "benign_median": 1.0,
+        "benign_p01": 0.5,
+        "benign_p99": 1.600000023841858,
+        "nearest_benign_range": [
+          0.555556,
+          0.583333
+        ],
+        "distance_contribution": 0.1851
+      },
+      {
+        "feature": "act_data_pkt_fwd",
+        "observed_value": 1.0,
+        "reference": "Within benign range (benign median 1, 1st-99th percentile 0-23); accounts for 10% of the distance to the 5 most similar benign flows (their values: 1 to 4)",
+        "severity": "info",
+        "direction": "below",
+        "benign_tail_probability": 0.661659,
+        "benign_median": 1.0,
+        "benign_p01": 0.0,
+        "benign_p99": 23.0,
+        "nearest_benign_range": [
+          1.0,
+          4.0
+        ],
+        "distance_contribution": 0.097
+      },
+      {
+        "feature": "Bwd IAT Min",
+        "observed_value": 195.0,
+        "reference": "Within benign range (benign median 3, 1st-99th percentile 0-6.6e+07); accounts for 9% of the distance to the 5 most similar benign flows (their values: 1 to 90)",
+        "severity": "info",
+        "direction": "above",
+        "benign_tail_probability": 0.122404,
+        "benign_median": 3.0,
+        "benign_p01": 0.0,
+        "benign_p99": 66000624.0,
+        "nearest_benign_range": [
+          1.0,
+          90.0
+        ],
+        "distance_contribution": 0.0885
+      }
+    ],
+    "reason": "Anomaly score 0.996: more unusual than 99.6% of benign reference flows (threshold 0.970). The flow is far from all similar benign flows (kNN distance at benign percentile 99.8) and globally isolated (Isolation Forest at benign percentile 97.0). Main deviations: unusually high packet size (Bwd Packet Length Mean); atypical download/upload ratio for comparable benign flows (Down/Up Ratio); atypical data packet count for comparable benign flows (act_data_pkt_fwd); atypical packet inter-arrival time for comparable benign flows (Bwd IAT Min).",
+    "rationale": "Anomaly score 0.996: more unusual than 99.6% of benign reference flows (threshold 0.970). The flow is far from all similar benign flows (kNN distance at benign percentile 99.8) and globally isolated (Isolation Forest at benign percentile 97.0). Main deviations: unusually high packet size (Bwd Packet Length Mean); atypical download/upload ratio for comparable benign flows (Down/Up Ratio); atypical data packet count for comparable benign flows (act_data_pkt_fwd); atypical packet inter-arrival time for comparable benign flows (Bwd IAT Min).",
+    "threshold": 0.97,
+    "components": {
+      "knn_benign_percentile": 0.997518,
+      "isolation_forest_benign_percentile": 0.970324
+    },
+    "data_quality": {
+      "missing_features": [],
+      "invalid_features": [],
+      "non_finite_features": [],
+      "imputed_model_features": [],
+      "reliable": true
+    },
+    "agent": "anomaly_detection",
+    "schema_version": "1.1",
+    "model_version": "agent2-knn-iforest-1.1"
+  },
+  {
+    "record_id": "C422922",
+    "anomaly_score": 0.976246,
+    "is_anomaly": true,
+    "evidence": [
+      {
+        "feature": "Bwd Packet Length Mean",
+        "observed_value": 1656.4285888671875,
+        "reference": "Above benign reference range: only 0.82% of benign flows have a value this high or higher (benign median 116, 1st-99th percentile 0-1,604.74)",
+        "severity": "medium",
+        "direction": "above",
+        "benign_tail_probability": 0.008186,
+        "benign_median": 116.0,
+        "benign_p01": 0.0,
+        "benign_p99": 1604.7432861328125,
+        "nearest_benign_range": [
+          588.333,
+          1206.36
+        ],
+        "distance_contribution": 0.0806
+      },
+      {
+        "feature": "Packet Length Mean",
+        "observed_value": 797.2000122070312,
+        "reference": "Above benign reference range: only 2.43% of benign flows have a value this high or higher (benign median 81, 1st-99th percentile 0-969.5)",
+        "severity": "low",
+        "direction": "above",
+        "benign_tail_probability": 0.024298,
+        "benign_median": 81.0,
+        "benign_p01": 0.0,
+        "benign_p99": 969.489501953125,
+        "nearest_benign_range": [
+          280.7,
+          595.967
+        ],
+        "distance_contribution": 0.1223
+      },
+      {
+        "feature": "act_data_pkt_fwd",
+        "observed_value": 1.0,
+        "reference": "Within benign range (benign median 1, 1st-99th percentile 0-23); accounts for 17% of the distance to the 5 most similar benign flows (their values: 1 to 5)",
+        "severity": "info",
+        "direction": "below",
+        "benign_tail_probability": 0.661659,
+        "benign_median": 1.0,
+        "benign_p01": 0.0,
+        "benign_p99": 23.0,
+        "nearest_benign_range": [
+          1.0,
+          5.0
+        ],
+        "distance_contribution": 0.1674
+      },
+      {
+        "feature": "Fwd Packet Length Mean",
+        "observed_value": 45.375,
+        "reference": "Within benign range (benign median 43, 1st-99th percentile 0-429.9); accounts for 16% of the distance to the 5 most similar benign flows (their values: 22.62 to 61.88)",
+        "severity": "info",
+        "direction": "above",
+        "benign_tail_probability": 0.425778,
+        "benign_median": 43.0,
+        "benign_p01": 0.0,
+        "benign_p99": 429.8666687011719,
+        "nearest_benign_range": [
+          22.625,
+          61.875
+        ],
+        "distance_contribution": 0.1593
+      },
+      {
+        "feature": "Bwd IAT Min",
+        "observed_value": 48.0,
+        "reference": "Within benign range (benign median 3, 1st-99th percentile 0-6.6e+07); accounts for 11% of the distance to the 5 most similar benign flows (their values: 1 to 4)",
+        "severity": "info",
+        "direction": "above",
+        "benign_tail_probability": 0.288352,
+        "benign_median": 3.0,
+        "benign_p01": 0.0,
+        "benign_p99": 66000624.0,
+        "nearest_benign_range": [
+          1.0,
+          4.0
+        ],
+        "distance_contribution": 0.1099
+      }
+    ],
+    "reason": "Anomaly score 0.976: more unusual than 97.6% of benign reference flows (threshold 0.970). The flow is far from all similar benign flows (kNN distance at benign percentile 99.1). Main deviations: unusually high packet size (Bwd Packet Length Mean); atypical data packet count for comparable benign flows (act_data_pkt_fwd); atypical packet size for comparable benign flows (Fwd Packet Length Mean); atypical packet inter-arrival time for comparable benign flows (Bwd IAT Min).",
+    "rationale": "Anomaly score 0.976: more unusual than 97.6% of benign reference flows (threshold 0.970). The flow is far from all similar benign flows (kNN distance at benign percentile 99.1). Main deviations: unusually high packet size (Bwd Packet Length Mean); atypical data packet count for comparable benign flows (act_data_pkt_fwd); atypical packet size for comparable benign flows (Fwd Packet Length Mean); atypical packet inter-arrival time for comparable benign flows (Bwd IAT Min).",
+    "threshold": 0.97,
+    "components": {
+      "knn_benign_percentile": 0.991444,
+      "isolation_forest_benign_percentile": 0.894927
+    },
+    "data_quality": {
+      "missing_features": [],
+      "invalid_features": [],
+      "non_finite_features": [],
+      "imputed_model_features": [],
+      "reliable": true
+    },
+    "agent": "anomaly_detection",
+    "schema_version": "1.1",
+    "model_version": "agent2-knn-iforest-1.1"
+  },
+  {
+    "record_id": "C221234",
+    "anomaly_score": 0.990377,
+    "is_anomaly": true,
+    "evidence": [
+      {
+        "feature": "Bwd Packets/s",
+        "observed_value": 28571.427734375,
+        "reference": "Above benign reference range: only 0.12% of benign flows have a value this high or higher (benign median 26.33, 1st-99th percentile 0.01939-13,793.1)",
+        "severity": "medium",
+        "direction": "above",
+        "benign_tail_probability": 0.001197,
+        "benign_median": 26.326181411743164,
+        "benign_p01": 0.019390519708395004,
+        "benign_p99": 13793.103515625,
+        "nearest_benign_range": [
+          12658.2,
+          100000.0
+        ],
+        "distance_contribution": 0.0238
+      },
+      {
+        "feature": "Flow Duration",
+        "observed_value": 35.0,
+        "reference": "Below benign reference range: only 0.25% of benign flows have a value this low or lower (benign median 71,294, 1st-99th percentile 142-1.18e+08)",
+        "severity": "medium",
+        "direction": "below",
+        "benign_tail_probability": 0.002504,
+        "benign_median": 71294.0,
+        "benign_p01": 142.0,
+        "benign_p99": 118482056.0,
+        "nearest_benign_range": [
+          10.0,
+          79.0
+        ],
+        "distance_contribution": 0.01
+      },
+      {
+        "feature": "Init_Win_bytes_backward",
+        "observed_value": 0.0,
+        "reference": "Within benign range (benign median 0, 1st-99th percentile 0-31,088); accounts for 91% of the distance to the 5 most similar benign flows (their values: 1,024)",
+        "severity": "info",
+        "direction": "below",
+        "benign_tail_probability": 0.652166,
+        "benign_median": 0.0,
+        "benign_p01": 0.0,
+        "benign_p99": 31088.0,
+        "nearest_benign_range": [
+          1024.0,
+          1024.0
+        ],
+        "distance_contribution": 0.9068
+      }
+    ],
+    "reason": "Anomaly score 0.990: more unusual than 99.0% of benign reference flows (threshold 0.970). The flow is globally isolated (Isolation Forest at benign percentile 98.5). Main deviations: unusually high packet rate (Bwd Packets/s); unusually low flow duration (Flow Duration); atypical TCP initial window size for comparable benign flows (Init_Win_bytes_backward).",
+    "rationale": "Anomaly score 0.990: more unusual than 99.0% of benign reference flows (threshold 0.970). The flow is globally isolated (Isolation Forest at benign percentile 98.5). Main deviations: unusually high packet rate (Bwd Packets/s); unusually low flow duration (Flow Duration); atypical TCP initial window size for comparable benign flows (Init_Win_bytes_backward).",
+    "threshold": 0.97,
+    "components": {
+      "knn_benign_percentile": 0.953233,
+      "isolation_forest_benign_percentile": 0.98489
+    },
+    "data_quality": {
+      "missing_features": [],
+      "invalid_features": [],
+      "non_finite_features": [],
+      "imputed_model_features": [],
+      "reliable": true
+    },
+    "agent": "anomaly_detection",
+    "schema_version": "1.1",
+    "model_version": "agent2-knn-iforest-1.1"
+  },
+  {
+    "record_id": "C200303",
+    "anomaly_score": 0.991444,
+    "is_anomaly": true,
+    "evidence": [
+      {
+        "feature": "Flow Duration",
+        "observed_value": 91.0,
+        "reference": "Below benign reference range: only 0.40% of benign flows have a value this low or lower (benign median 71,294, 1st-99th percentile 142-1.18e+08)",
+        "severity": "medium",
+        "direction": "below",
+        "benign_tail_probability": 0.004006,
+        "benign_median": 71294.0,
+        "benign_p01": 142.0,
+        "benign_p99": 118482056.0,
+        "nearest_benign_range": [
+          10.0,
+          79.0
+        ],
+        "distance_contribution": 0.0212
+      },
+      {
+        "feature": "Init_Win_bytes_backward",
+        "observed_value": 0.0,
+        "reference": "Within benign range (benign median 0, 1st-99th percentile 0-31,088); accounts for 83% of the distance to the 5 most similar benign flows (their values: 1,024)",
+        "severity": "info",
+        "direction": "below",
+        "benign_tail_probability": 0.652166,
+        "benign_median": 0.0,
+        "benign_p01": 0.0,
+        "benign_p99": 31088.0,
+        "nearest_benign_range": [
+          1024.0,
+          1024.0
+        ],
+        "distance_contribution": 0.8297
+      }
+    ],
+    "reason": "Anomaly score 0.991: more unusual than 99.1% of benign reference flows (threshold 0.970). The flow is globally isolated (Isolation Forest at benign percentile 98.3). Main deviations: unusually low flow duration (Flow Duration); atypical TCP initial window size for comparable benign flows (Init_Win_bytes_backward).",
+    "rationale": "Anomaly score 0.991: more unusual than 99.1% of benign reference flows (threshold 0.970). The flow is globally isolated (Isolation Forest at benign percentile 98.3). Main deviations: unusually low flow duration (Flow Duration); atypical TCP initial window size for comparable benign flows (Init_Win_bytes_backward).",
+    "threshold": 0.97,
+    "components": {
+      "knn_benign_percentile": 0.95983,
+      "isolation_forest_benign_percentile": 0.983366
+    },
+    "data_quality": {
+      "missing_features": [],
+      "invalid_features": [],
+      "non_finite_features": [],
+      "imputed_model_features": [],
+      "reliable": true
+    },
+    "agent": "anomaly_detection",
+    "schema_version": "1.1",
+    "model_version": "agent2-knn-iforest-1.1"
+  }
+]

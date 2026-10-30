@@ -1,0 +1,22 @@
+# Datasets (never commit)
+data/
+
+# Generated model binaries
+models/*.joblib
+models/*.pkl
+
+# Generated outputs that are large or regenerable
+outputs/*.png
+
+# Environments / secrets
+.env
+.env.*
+.venv/
+venv/
+*.key
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
