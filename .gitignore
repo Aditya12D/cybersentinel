@@ -16,3 +16,7 @@ catboost_info/
 # Agent 2 (anomaly detection): regenerable model binary and plot
 models/anomaly_detector.joblib
 outputs/*.png
+
+# Pipeline per-flow outputs (regenerate with: python run_pipeline.py)
+outputs/pipeline_predictions.csv
+outputs/pipeline_results.jsonl

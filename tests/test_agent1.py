@@ -5,7 +5,7 @@ import pandas as pd
 
 from agents.threat_detection import CLASSES, ROOT, predict_batch, predict_threat
 
-EV = pd.read_parquet(ROOT / "data" / "Cyber" / "eval" / "flows.parquet")
+EV = pd.read_parquet(ROOT / "data" / "raw" / "eval" / "flows.parquet")
 
 
 def test_contract_on_real_rows():

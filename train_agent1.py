@@ -24,7 +24,7 @@ from sklearn.model_selection import train_test_split
 from agents.threat_detection import CLASSES, DROP, MODEL_DIR, ROOT, feature_columns, prepare
 
 SEED = 42
-DATA = ROOT / "data" / "Cyber"
+DATA = ROOT / "data" / "raw"
 EVAL_DIR = ROOT / "evaluation"
 
 
