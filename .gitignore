@@ -1,6 +1,18 @@
 .venv/
+venv/
 data/
 __pycache__/
 *.pyc
 .DS_Store
 catboost_info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Environments / secrets
+.env
+.env.*
+*.key
+
+# Agent 2 (anomaly detection): regenerable model binary and plot
+models/anomaly_detector.joblib
+outputs/*.png

@@ -74,3 +74,62 @@ Port scans are a multi-flow pattern (one source, many ports): catch them with th
 IP/port metadata in fusion, not by memorizing rows.
 
 Tests: `python -m pytest tests -q` (contract, dirty input, batch == single). Single-flow latency ≈ 2 ms.
+
+## Agent 2 — Anomaly Detection (`src/agents/anomaly_detection/`)
+
+Independent, benign-only novelty detector. It reports how unusual a flow is compared with normal
+traffic, with measured feature evidence and a reason. It never predicts an attack class, never uses
+Agent 1's output and never returns ALLOW/BLOCK. Full documentation:
+[`src/agents/anomaly_detection/README.md`](src/agents/anomaly_detection/README.md).
+
+```bash
+pip install -r src/agents/anomaly_detection/requirements.txt
+# expects data/raw/{training,eval}/flows.parquet (gitignored)
+python -m src.agents.anomaly_detection.train        # ~20 s -> models/anomaly_detector.joblib (gitignored, deterministic)
+python -m src.agents.anomaly_detection.evaluation   # -> outputs/anomaly_evaluation.json
+python -m pytest tests/anomaly_detection -q         # 36 tests
+```
+
+```python
+from src.agents.anomaly_detection import detect_anomaly, detect_anomalies
+detect_anomaly(flow_dict)      # one flow -> dict
+detect_anomalies(df_or_dicts)  # list of dicts, input order preserved (preferred for throughput)
+```
+Output (abridged):
+```json
+{"record_id": "C289947", "anomaly_score": 0.992771, "is_anomaly": true, "threshold": 0.97,
+ "evidence": [{"feature": "RST Flag Count", "observed_value": 2.0, "severity": "low", "direction": "above",
+               "reference": "Above benign reference range: only 3.87% of benign flows have a value this high or higher ..."}],
+ "reason": "Anomaly score 0.993: more unusual than 99.3% of benign reference flows ...",
+ "components": {"knn_benign_percentile": 0.9989, "isolation_forest_benign_percentile": 0.9493},
+ "data_quality": {"missing_features": [], "invalid_features": [], "non_finite_features": [],
+                  "imputed_model_features": [], "reliable": true},
+ "agent": "anomaly_detection", "schema_version": "1.1"}
+```
+`anomaly_score` is a **benign percentile** (0.99 = more unusual than 99% of normal traffic), not an attack probability.
+
+**Model:** the average of two benign percentiles, fitted on de-duplicated BENIGN training flows only.
+- **kNN distance** to the 5 nearest of 100k benign prototypes. It catches DoS, DDoS and brute force.
+- **Isolation Forest.** It catches port scans.
+
+Both members use 40 de-correlated features; `Destination Port` is excluded. The threshold of 0.97
+maximises F1 subject to a benign false-positive rate of at most 3%, chosen on half of eval; the other
+half is used only for reporting.
+
+**Holdout results** (untouched half of eval, n = 57,093):
+
+| precision | recall | F1 | benign FPR | ROC-AUC | PR-AUC |
+|---|---|---|---|---|---|
+| 0.968 | 0.993 | 0.980 | 2.97% | 0.989 | 0.969 |
+
+Per-class recall: BRUTE_FORCE 99.6%, DOS 98.4%, DDOS 100%, PORT_SCAN 100%.
+
+**Ablation** (same splits and rule): kNN alone reaches recall 0.787 (20% of port scans), Isolation
+Forest alone 0.286, and the fused model 0.993.
+
+**Latency:** single flow 4.4 ms (p50), batch 0.19 ms per flow.
+
+**Note for Agent 3:**
+- False positives concentrate in long-lived benign HTTPS/HTTP sessions (port 443 FPR 8.5%; port 53 FPR 0.08%).
+- Misses are slow, long DoS flows scoring just under the threshold (median score 0.966).
+- Agent 2 is most useful exactly where Agent 1 is a low-confidence BENIGN. Treat `data_quality.reliable == false` with caution.
