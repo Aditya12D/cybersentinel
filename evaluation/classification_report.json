@@ -1,0 +1,45 @@
+{
+  "BENIGN": {
+    "precision": 0.99996666833325,
+    "recall": 1.0,
+    "f1-score": 0.9999833338888704,
+    "support": 60001.0
+  },
+  "BRUTE_FORCE": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 1384.0
+  },
+  "DOS": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 24000.0
+  },
+  "DDOS": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 14400.0
+  },
+  "PORT_SCAN": {
+    "precision": 1.0,
+    "recall": 0.9998611111111111,
+    "f1-score": 0.9999305507326898,
+    "support": 14400.0
+  },
+  "accuracy": 0.9999824845645224,
+  "macro avg": {
+    "precision": 0.99999333366665,
+    "recall": 0.9999722222222222,
+    "f1-score": 0.999982776924312,
+    "support": 114185.0
+  },
+  "weighted avg": {
+    "precision": 0.9999824851483412,
+    "recall": 0.9999824845645224,
+    "f1-score": 0.9999824841022625,
+    "support": 114185.0
+  }
+}
