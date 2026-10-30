@@ -2,11 +2,63 @@
 
 Multi-agent network intrusion detection on CICIDS2017 (5 classes).
 
-## Setup
+## Run from scratch
+
+Tested on macOS (Apple Silicon), Python 3.13.9. Needs ~4 GB RAM and the participant data pack.
+
+**1. Clone**
 ```bash
-uv venv -p 3.13 .venv && uv pip install -p .venv/bin/python -r requirements.txt
-# put the participant pack at data/raw/{training,eval}/flows.parquet (gitignored; both agents read it)
+git clone https://github.com/Aditya12D/cybersentinel.git
+cd cybersentinel
+git checkout agent3-evidence-fusion        # until it is merged into main
 ```
+
+**2. Python environment**
+```bash
+# macOS / Linux
+python3 -m venv .venv && source .venv/bin/activate
+# Windows (PowerShell)
+#   py -3 -m venv .venv ; .venv\Scripts\Activate.ps1
+pip install -r requirements.txt            # exact pinned versions; the saved Agent 1 model needs them
+```
+
+**3. Data** — copy the pack's two parquet files to (the `data/` folder is gitignored):
+```
+data/raw/training/flows.parquet     sha256 bf2ebe1a70d4edbbc6493baa01a8e881903b6466d32dfd2b3b0376557434a769
+data/raw/eval/flows.parquet         sha256 44d518f70972edcf7a948746d517c494fce581198cf1c63aa465e770bb2668eb
+```
+Check with `shasum -a 256 data/raw/*/flows.parquet` (Windows: `certutil -hashfile <file> SHA256`).
+
+**4. Models**
+```bash
+# Agent 1 model is committed (models/threat_model.pkl). Optional retrain, ~2 min, bit-identical on the same machine:
+python train_agent1.py final --model lgbm
+# Agent 2 model is NOT committed - train it once, ~10 s:
+python -m src.agents.anomaly_detection.train
+```
+
+**5. Tests** — expect `133 passed` (Agent 1: 3, Agent 2: 36, Agent 3: 94, incl. end-to-end):
+```bash
+python -m pytest tests -q
+```
+
+**6. Run the full three-agent pipeline**
+```bash
+python run_pipeline.py                                   # official eval set (~25 s)
+python run_pipeline.py --input path/to/flows.parquet     # any flows file; label column optional
+```
+Outputs: `outputs/pipeline_report.json` (all metrics), `outputs/pipeline_predictions.csv` (one row per flow:
+final_class, decision, evidence_status, needs_review, rule, agent signals) and `outputs/pipeline_results.jsonl`
+(full per-flow result with rationale). The two per-flow files are gitignored.
+
+**7. Level 1 summary metrics** (what we submitted: final Agent 3 class vs label; macro-F1 = 2PR/(P+R))
+```bash
+python -c "import pandas as pd; from sklearn.metrics import accuracy_score as A, precision_score as P, recall_score as R; C=['BENIGN','BRUTE_FORCE','DOS','DDOS','PORT_SCAN']; m=pd.read_parquet('data/raw/eval/flows.parquet',columns=['record_id','label']).merge(pd.read_csv('outputs/pipeline_predictions.csv'),on='record_id'); p=P(m.label,m.final_class,labels=C,average='macro'); r=R(m.label,m.final_class,labels=C,average='macro'); print(len(m), round(A(m.label,m.final_class),8), round(p,8), round(r,8), round(2*p*r/(p+r),8))"
+# -> 114185 0.99998248 0.99999333 0.99997222 0.99998278   (submitted F1 0.99998277 = 2PR/(P+R) of the rounded P, R)
+```
+
+Note: Agent 2 retrained on a different OS / library build can differ slightly in its last digits; use one
+machine's trained model for a whole run.
 
 ## Agent 1 — Threat Detection (`agents/threat_detection.py`)
 
