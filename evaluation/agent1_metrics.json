@@ -1,0 +1,42 @@
+{
+  "eval": {
+    "accuracy": 0.9999824845645224,
+    "macro_f1": 0.999982776924312,
+    "macro_precision": 0.99999333366665,
+    "macro_recall": 0.9999722222222222,
+    "weighted_f1": 0.9999824841022625,
+    "log_loss": 4.156848659209223e-05,
+    "ece": 1.227371127050349e-05,
+    "f1_BENIGN": 0.9999833338888704,
+    "f1_BRUTE_FORCE": 1.0,
+    "f1_DOS": 1.0,
+    "f1_DDOS": 1.0,
+    "f1_PORT_SCAN": 0.9999305507326898,
+    "recall_BENIGN": 1.0,
+    "recall_BRUTE_FORCE": 1.0,
+    "recall_DOS": 1.0,
+    "recall_DDOS": 1.0,
+    "recall_PORT_SCAN": 0.9998611111111111
+  },
+  "eval_unseen_rows": {
+    "accuracy": 0.9999808410767315,
+    "macro_f1": 0.9999735285387026,
+    "macro_precision": 0.9999928499928501,
+    "macro_recall": 0.9999542124542125,
+    "weighted_f1": 0.999980840151292,
+    "log_loss": 4.545843905606943e-05,
+    "ece": 1.343581672567329e-05,
+    "f1_BENIGN": 0.9999821246626031,
+    "f1_BRUTE_FORCE": 1.0,
+    "f1_DOS": 1.0,
+    "f1_DDOS": 1.0,
+    "f1_PORT_SCAN": 0.9998855180309101,
+    "recall_BENIGN": 1.0,
+    "recall_BRUTE_FORCE": 1.0,
+    "recall_DOS": 1.0,
+    "recall_DDOS": 1.0,
+    "recall_PORT_SCAN": 0.9997710622710623
+  },
+  "n_eval": 114185,
+  "n_eval_unseen": 104390
+}
