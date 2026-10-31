@@ -1,0 +1,3 @@
+policy_id,activated_after_record_id,scope_type,scope_value,expires_after_record_id
+P0001,F000014,SRC_DST_PAIR,172.16.0.1|192.168.10.50,F000114
+P0002,F000115,SRC_DST_PAIR,172.16.0.1|192.168.10.50,F000200

@@ -2,11 +2,63 @@
 
 Multi-agent network intrusion detection on CICIDS2017 (5 classes).
 
-## Setup
+## Run from scratch
+
+Tested on macOS (Apple Silicon), Python 3.13.9. Needs ~4 GB RAM and the participant data pack.
+
+**1. Clone**
 ```bash
-uv venv -p 3.13 .venv && uv pip install -p .venv/bin/python -r requirements.txt
-# put the participant pack at data/raw/{training,eval}/flows.parquet (gitignored; both agents read it)
+git clone https://github.com/Aditya12D/cybersentinel.git
+cd cybersentinel
+git checkout agent3-evidence-fusion        # until it is merged into main
 ```
+
+**2. Python environment**
+```bash
+# macOS / Linux
+python3 -m venv .venv && source .venv/bin/activate
+# Windows (PowerShell)
+#   py -3 -m venv .venv ; .venv\Scripts\Activate.ps1
+pip install -r requirements.txt            # exact pinned versions; the saved Agent 1 model needs them
+```
+
+**3. Data** — copy the pack's two parquet files to (the `data/` folder is gitignored):
+```
+data/raw/training/flows.parquet     sha256 bf2ebe1a70d4edbbc6493baa01a8e881903b6466d32dfd2b3b0376557434a769
+data/raw/eval/flows.parquet         sha256 44d518f70972edcf7a948746d517c494fce581198cf1c63aa465e770bb2668eb
+```
+Check with `shasum -a 256 data/raw/*/flows.parquet` (Windows: `certutil -hashfile <file> SHA256`).
+
+**4. Models**
+```bash
+# Agent 1 model is committed (models/threat_model.pkl). Optional retrain, ~2 min, bit-identical on the same machine:
+python train_agent1.py final --model lgbm
+# Agent 2 model is NOT committed - train it once, ~10 s:
+python -m src.agents.anomaly_detection.train
+```
+
+**5. Tests** — expect `133 passed` (Agent 1: 3, Agent 2: 36, Agent 3: 94, incl. end-to-end):
+```bash
+python -m pytest tests -q
+```
+
+**6. Run the full three-agent pipeline**
+```bash
+python run_pipeline.py                                   # official eval set (~25 s)
+python run_pipeline.py --input path/to/flows.parquet     # any flows file; label column optional
+```
+Outputs: `outputs/pipeline_report.json` (all metrics), `outputs/pipeline_predictions.csv` (one row per flow:
+final_class, decision, evidence_status, needs_review, rule, agent signals) and `outputs/pipeline_results.jsonl`
+(full per-flow result with rationale). The two per-flow files are gitignored.
+
+**7. Level 1 summary metrics** (what we submitted: final Agent 3 class vs label; macro-F1 = 2PR/(P+R))
+```bash
+python -c "import pandas as pd; from sklearn.metrics import accuracy_score as A, precision_score as P, recall_score as R; C=['BENIGN','BRUTE_FORCE','DOS','DDOS','PORT_SCAN']; m=pd.read_parquet('data/raw/eval/flows.parquet',columns=['record_id','label']).merge(pd.read_csv('outputs/pipeline_predictions.csv'),on='record_id'); p=P(m.label,m.final_class,labels=C,average='macro'); r=R(m.label,m.final_class,labels=C,average='macro'); print(len(m), round(A(m.label,m.final_class),8), round(p,8), round(r,8), round(2*p*r/(p+r),8))"
+# -> 114185 0.99998248 0.99999333 0.99997222 0.99998278   (submitted F1 0.99998277 = 2PR/(P+R) of the rounded P, R)
+```
+
+Note: Agent 2 retrained on a different OS / library build can differ slightly in its last digits; use one
+machine's trained model for a whole run.
 
 ## Agent 1 — Threat Detection (`agents/threat_detection.py`)
 
@@ -170,3 +222,48 @@ training-only out-of-fold rows — not enough evidence to enable).
 **Eval set (n = 114,185; no fusion rule was tuned on it):** final macro-F1 0.99998 (same 2 PORT_SCAN
 rows as Agent 1, both now **BLOCKed** as UNCERTAIN), 0 false ALLOW, 1 false BLOCK, 2,088 flows flagged
 for review. Throughput 0.19 ms/flow in batch; 5.7 ms p50 for a single flow through all three agents.
+
+## Level 2 — Agents 4 + 5 and the hidden-set replay (`level2.py`)
+
+```bash
+unzip cyber-hidden.zip -d data/hidden            # -> data/hidden/Cyber/hidden/records.csv (gitignored)
+python level2.py                                 # -> outputs/level2/{classification,replay,policies}.csv + agent logs
+python validate_submission.py                    # offline copy of the portal validator -> VALID / list of problems
+python -m pytest tests -q                        # 150 tests (17 for Level 2)
+```
+
+Flow: A1 + A2 → A3 for every record (each flow scored from its own features only), then a strict
+`seq`-ordered loop: **A5 applies already-active policies first**; only ALLOWed flows reach **A4**, which
+may lead A5 to create a policy for **later** records. No labels, no future records.
+
+- **Agent 4 — Temporal Correlation** (`src/agents/temporal_correlation.py`). A flow is suspicious when
+  A3 recommends BLOCK; *strong* when A1 predicts an attack class and A2 independently flags the flow
+  as anomalous (A2 measures unusualness; it never classifies attacks). Suspicious flows from one source
+  join a group while consecutive flows are ≤ 300 s apart (`day` + `time_offset` → real timestamp; days
+  never merge). Group output: id, members, seq range, destinations, ports, protocols, A3 classes,
+  time span, pattern (`SINGLE_FLOW` / `REPEATED_PAIR` / `MULTI_DESTINATION` / `MULTI_PORT_ACTIVITY`) and
+  evidence strength: HIGH (≥ 2 flows incl. a strong one), MEDIUM (one strong flow, or ≥ 2 weak flows),
+  LOW (one weak flow). Per suspicious flow it also reports **destination fan-in** (distinct suspicious
+  sources hitting the same destination in the window; `MULTI_SOURCE_TARGET` at ≥ 3) and proposes the
+  **policy window** — activation index = this record, expiry index = +100 records — as the portal's
+  system map assigns to A4. Rejects out-of-order and duplicate records.
+- **Agent 5 — Adaptive Defense** (`src/agents/adaptive_defense.py`). HIGH/MEDIUM evidence enacts A4's
+  proposed window as a BLOCK policy: active from the record after the trigger (exclusive) through the
+  expiry record (inclusive).
+  Scope: `SRC_DST_PAIR` while the evidence involves one destination and one port (narrowest — keeps the
+  source's other traffic), `SOURCE_IP` once it spans several ports or hosts. A single weak flow never
+  blocks. BLOCK reports the smallest matching policy id; ALLOW reports `NONE`.
+- `classification.csv`: A3 final class, A2 anomaly score (benign-unusualness percentile), A3 status
+  mapped AGREEMENT→AGREE, DISAGREEMENT→CONFLICT, UNCERTAIN/INVALID_EVIDENCE→UNCERTAIN.
+
+Trade-offs: the first flow of each campaign is always allowed (a policy can only affect later records);
+the 100-record TTL keeps policies temporary at the cost of one re-trigger flow per expiry; 300 s / 100
+records are a-priori values — the labelled training pack has no IPs or timestamps to validate them on.
+
+**Nothing is IP-specific.** No IP address or record ID is hardcoded. Renaming every source and destination
+IP in the hidden set (e.g. 172.16.0.1 → 10.99.99.99) gives identical ALLOW/BLOCK decisions and classes for
+all 200 records and the same policies at the same records, only naming the new addresses — tested in
+`tests/test_level2.py::test_hidden_replay_is_valid_and_deterministic` (and a model-free version). Agents 4–5
+were built on Day 2 after the unlabelled hidden records were released; there are no labels, decisions use
+only earlier records, and the replay is identical for time windows of 60–3600 s and for SOURCE_IP vs
+SRC_DST_PAIR scope, so the result comes from Agents 1–3's evidence rather than tuning to the hidden set.

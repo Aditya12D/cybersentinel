@@ -1,0 +1,50 @@
+[
+ {
+  "group_id": "G001",
+  "source_ip": "172.16.0.1",
+  "destination_ip": "192.168.10.50",
+  "member_records": [
+   "F000014"
+  ],
+  "first_seq": 14,
+  "last_seq": 14,
+  "suspicious_flow_count": 1,
+  "strong_flow_count": 1,
+  "unique_destinations": 1,
+  "unique_destination_ports": 1,
+  "protocols": [
+   6
+  ],
+  "agent3_classes": {
+   "BRUTE_FORCE": 1
+  },
+  "time_window_seconds": 0.0,
+  "pattern": "SINGLE_FLOW",
+  "evidence_strength": "MEDIUM",
+  "evidence": "1 suspicious flow(s) from 172.16.0.1 (1 where Agent 1 predicted an attack and Agent 2 flagged it anomalous) to 1 destination(s), 1 port(s), seq 14-14 over 0 s"
+ },
+ {
+  "group_id": "G002",
+  "source_ip": "172.16.0.1",
+  "destination_ip": "192.168.10.50",
+  "member_records": [
+   "F000115"
+  ],
+  "first_seq": 115,
+  "last_seq": 115,
+  "suspicious_flow_count": 1,
+  "strong_flow_count": 1,
+  "unique_destinations": 1,
+  "unique_destination_ports": 1,
+  "protocols": [
+   6
+  ],
+  "agent3_classes": {
+   "DOS": 1
+  },
+  "time_window_seconds": 0.0,
+  "pattern": "SINGLE_FLOW",
+  "evidence_strength": "MEDIUM",
+  "evidence": "1 suspicious flow(s) from 172.16.0.1 (1 where Agent 1 predicted an attack and Agent 2 flagged it anomalous) to 1 destination(s), 1 port(s), seq 115-115 over 0 s"
+ }
+]

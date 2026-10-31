@@ -1,0 +1,28 @@
+[
+ {
+  "policy_id": "P0001",
+  "activated_after_record_id": "F000014",
+  "scope_type": "SRC_DST_PAIR",
+  "scope_value": "172.16.0.1|192.168.10.50",
+  "expires_after_record_id": "F000114",
+  "policy_action": "BLOCK",
+  "group_id": "G001",
+  "evidence_strength": "MEDIUM",
+  "pattern": "SINGLE_FLOW",
+  "evidence": "1 suspicious flow(s) from 172.16.0.1 (1 where Agent 1 predicted an attack and Agent 2 flagged it anomalous) to 1 destination(s), 1 port(s), seq 14-14 over 0 s",
+  "destination_fan_in": 1
+ },
+ {
+  "policy_id": "P0002",
+  "activated_after_record_id": "F000115",
+  "scope_type": "SRC_DST_PAIR",
+  "scope_value": "172.16.0.1|192.168.10.50",
+  "expires_after_record_id": "F000200",
+  "policy_action": "BLOCK",
+  "group_id": "G002",
+  "evidence_strength": "MEDIUM",
+  "pattern": "SINGLE_FLOW",
+  "evidence": "1 suspicious flow(s) from 172.16.0.1 (1 where Agent 1 predicted an attack and Agent 2 flagged it anomalous) to 1 destination(s), 1 port(s), seq 115-115 over 0 s",
+  "destination_fan_in": 1
+ }
+]

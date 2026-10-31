@@ -267,7 +267,7 @@ def fuse(a1: Any, a2: Any, cfg: FusionConfig = DEFAULT_CONFIG, record_id: str | 
                    f"most probable attack class.")
     if attack and flag:
         return out(BLOCK, AGREEMENT, "attack_agreement",
-                   "Both agents indicate malicious traffic: BLOCK.")
+                   "Agent 1 classifies it as an attack and Agent 2 independently flags it as anomalous: BLOCK.")
     if attack:
         return out(BLOCK, DISAGREEMENT, "attack_over_normal",
                    f"Agent 2 did not flag it, but an anomaly detector's 'normal' does not rule out an "
@@ -278,7 +278,7 @@ def fuse(a1: Any, a2: Any, cfg: FusionConfig = DEFAULT_CONFIG, record_id: str | 
         return out(d, DISAGREEMENT, "benign_over_anomaly",
                    f"Agent 1 is confident the flow is benign, but Agent 2 finds it unusual; the agents "
                    f"disagree. Policy: {d}, flagged for analyst review.")
-    return out(ALLOW, AGREEMENT, "benign_agreement", "Both agents indicate normal traffic: ALLOW.")
+    return out(ALLOW, AGREEMENT, "benign_agreement", "Agent 1 classifies it as benign and Agent 2 does not flag it as anomalous: ALLOW.")
 
 
 def fuse_batch(a1s: Sequence, a2s: Sequence, record_ids: Sequence | None = None,
