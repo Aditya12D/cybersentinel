@@ -12,8 +12,8 @@ from agents.threat_detection import CLASSES, MODEL_DIR, ROOT, prepare
 meta = json.loads((MODEL_DIR / "model_metadata.json").read_text())
 feats = meta["features"]
 model = joblib.load(MODEL_DIR / "threat_model.pkl")
-tr = pd.read_parquet(ROOT / "data/Cyber/training/flows.parquet")
-ev = pd.read_parquet(ROOT / "data/Cyber/eval/flows.parquet")
+tr = pd.read_parquet(ROOT / "data/raw/training/flows.parquet")
+ev = pd.read_parquet(ROOT / "data/raw/eval/flows.parquet")
 Xtr, Xev = prepare(tr, feats), prepare(ev, feats)
 p = model.predict_proba(Xev)
 pred = np.array(CLASSES)[p.argmax(1)]

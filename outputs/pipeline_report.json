@@ -1,0 +1,305 @@
+{
+  "input_rows": 114185,
+  "config": {
+    "min_confidence": 0.99,
+    "benign_anomaly_decision": "ALLOW",
+    "uncertain_decision": "BLOCK",
+    "invalid_decision": "BLOCK",
+    "prob_sum_tolerance": 0.001,
+    "confidence_tolerance": 1e-05,
+    "bayes_escalation": false,
+    "a2_likelihood_ratio": 32.5,
+    "max_evidence_features": 3
+  },
+  "agent1": {
+    "n": 114185,
+    "accuracy": 0.9999824845645224,
+    "macro_f1": 0.999982776924312,
+    "errors": 2,
+    "per_class": {
+      "BENIGN": {
+        "precision": 0.999967,
+        "recall": 1.0,
+        "f1-score": 0.999983,
+        "support": 60001.0
+      },
+      "BRUTE_FORCE": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 1384.0
+      },
+      "DOS": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 24000.0
+      },
+      "DDOS": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 14400.0
+      },
+      "PORT_SCAN": {
+        "precision": 1.0,
+        "recall": 0.999861,
+        "f1-score": 0.999931,
+        "support": 14400.0
+      }
+    }
+  },
+  "agent2": {
+    "note": "anomaly_score is a benign-unusualness percentile, not an attack probability. Agent 2's threshold (0.97) was originally selected on half of this eval set; it equals a 3% benign false-positive budget by construction, confirmed training-only.",
+    "threshold": 0.97,
+    "valid_outputs": 114185,
+    "precision": 0.9692340946754089,
+    "recall": 0.9930606821201831,
+    "false_positive_rate": 0.028466192230129497,
+    "false_negative_rate": 0.00693931787981692,
+    "confusion": {
+      "tn": 58293,
+      "fp": 1708,
+      "fn": 376,
+      "tp": 53808
+    },
+    "detection_rate_by_class": {
+      "BENIGN": 0.028466192230129497,
+      "BRUTE_FORCE": 0.9971098265895953,
+      "DOS": 0.9845,
+      "DDOS": 1.0,
+      "PORT_SCAN": 1.0
+    }
+  },
+  "agent3": {
+    "n": 114185,
+    "accuracy": 0.9999824845645224,
+    "macro_f1": 0.999982776924312,
+    "errors": 2,
+    "per_class": {
+      "BENIGN": {
+        "precision": 0.999967,
+        "recall": 1.0,
+        "f1-score": 0.999983,
+        "support": 60001.0
+      },
+      "BRUTE_FORCE": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 1384.0
+      },
+      "DOS": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 24000.0
+      },
+      "DDOS": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 14400.0
+      },
+      "PORT_SCAN": {
+        "precision": 1.0,
+        "recall": 0.999861,
+        "f1-score": 0.999931,
+        "support": 14400.0
+      }
+    },
+    "confusion_matrix": {
+      "labels_true": [
+        "BENIGN",
+        "BRUTE_FORCE",
+        "DOS",
+        "DDOS",
+        "PORT_SCAN"
+      ],
+      "labels_pred": [
+        "BENIGN",
+        "BRUTE_FORCE",
+        "DOS",
+        "DDOS",
+        "PORT_SCAN",
+        "UNKNOWN"
+      ],
+      "matrix": [
+        [
+          60001,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1384,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          24000,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          14400,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          14398,
+          0
+        ]
+      ]
+    },
+    "decisions": {
+      "ALLOW": 60000,
+      "BLOCK": 54185
+    },
+    "evidence_status": {
+      "DISAGREEMENT": 2084,
+      "AGREEMENT": 112097,
+      "UNCERTAIN": 4
+    },
+    "rules": {
+      "benign_over_anomaly": 1708,
+      "benign_agreement": 58292,
+      "attack_agreement": 53805,
+      "low_confidence": 4,
+      "attack_over_normal": 376
+    },
+    "needs_review": 2088,
+    "false_allow": {
+      "count": 0,
+      "by_rule": {},
+      "record_ids": []
+    },
+    "false_block": {
+      "count": 1,
+      "by_rule": {
+        "low_confidence": 1
+      }
+    },
+    "decision_accuracy": 0.9999912422822612
+  },
+  "examples": {
+    "benign_over_anomaly": [
+      {
+        "true_label": "BENIGN",
+        "record_id": "C000003",
+        "final_class": "BENIGN",
+        "decision": "ALLOW",
+        "evidence_status": "DISAGREEMENT",
+        "rationale": "Agent 1 classified the flow as BENIGN (confidence 1.0000). Agent 2 gave it an unusualness score of 0.991 (more unusual than 99.1% of held-out normal flows; an unusualness percentile, not an attack probability) and flagged it as anomalous (threshold 0.970). Main deviating features: act_data_pkt_fwd, Fwd Packet Length Mean, Active Std. Agent 1 is confident the flow is benign, but Agent 2 finds it unusual; the agents disagree. Policy: ALLOW, flagged for analyst review."
+      },
+      {
+        "true_label": "BENIGN",
+        "record_id": "C000006",
+        "final_class": "BENIGN",
+        "decision": "ALLOW",
+        "evidence_status": "DISAGREEMENT",
+        "rationale": "Agent 1 classified the flow as BENIGN (confidence 1.0000). Agent 2 gave it an unusualness score of 0.999 (more unusual than 99.9% of held-out normal flows; an unusualness percentile, not an attack probability) and flagged it as anomalous (threshold 0.970). Main deviating features: act_data_pkt_fwd, Active Std, Total Fwd Packets. Agent 1 is confident the flow is benign, but Agent 2 finds it unusual; the agents disagree. Policy: ALLOW, flagged for analyst review."
+      }
+    ],
+    "benign_agreement": [
+      {
+        "true_label": "BENIGN",
+        "record_id": "C000014",
+        "final_class": "BENIGN",
+        "decision": "ALLOW",
+        "evidence_status": "AGREEMENT",
+        "rationale": "Agent 1 classified the flow as BENIGN (confidence 1.0000). Agent 2 gave it an unusualness score of 0.955 (more unusual than 95.5% of held-out normal flows; an unusualness percentile, not an attack probability) and did not flag it (threshold 0.970). Both agents indicate normal traffic: ALLOW."
+      },
+      {
+        "true_label": "BENIGN",
+        "record_id": "C000016",
+        "final_class": "BENIGN",
+        "decision": "ALLOW",
+        "evidence_status": "AGREEMENT",
+        "rationale": "Agent 1 classified the flow as BENIGN (confidence 1.0000). Agent 2 gave it an unusualness score of 0.963 (more unusual than 96.3% of held-out normal flows; an unusualness percentile, not an attack probability) and did not flag it (threshold 0.970). Both agents indicate normal traffic: ALLOW."
+      }
+    ],
+    "attack_agreement": [
+      {
+        "true_label": "PORT_SCAN",
+        "record_id": "C022002",
+        "final_class": "PORT_SCAN",
+        "decision": "BLOCK",
+        "evidence_status": "AGREEMENT",
+        "rationale": "Agent 1 classified the flow as PORT_SCAN (confidence 1.0000). Agent 2 gave it an unusualness score of 0.990 (more unusual than 99.0% of held-out normal flows; an unusualness percentile, not an attack probability) and flagged it as anomalous (threshold 0.970). Main deviating features: Bwd Packets/s, Flow Duration, Init_Win_bytes_backward. Both agents indicate malicious traffic: BLOCK."
+      },
+      {
+        "true_label": "PORT_SCAN",
+        "record_id": "C022010",
+        "final_class": "PORT_SCAN",
+        "decision": "BLOCK",
+        "evidence_status": "AGREEMENT",
+        "rationale": "Agent 1 classified the flow as PORT_SCAN (confidence 1.0000). Agent 2 gave it an unusualness score of 0.991 (more unusual than 99.1% of held-out normal flows; an unusualness percentile, not an attack probability) and flagged it as anomalous (threshold 0.970). Main deviating features: Bwd Packets/s, Flow Duration, Init_Win_bytes_backward. Both agents indicate malicious traffic: BLOCK."
+      }
+    ],
+    "low_confidence": [
+      {
+        "true_label": "PORT_SCAN",
+        "record_id": "C023985",
+        "final_class": "BENIGN",
+        "decision": "BLOCK",
+        "evidence_status": "UNCERTAIN",
+        "rationale": "Agent 1 classified the flow as BENIGN (confidence 0.7827). Agent 2 gave it an unusualness score of 0.999 (more unusual than 99.9% of held-out normal flows; an unusualness percentile, not an attack probability) and flagged it as anomalous (threshold 0.970). Main deviating features: Bwd Header Length, Fwd Header Length, Fwd IAT Min. Agent 1's confidence is below the 0.99 floor, so the classification is uncertain; handled fail-safe (BLOCK)."
+      },
+      {
+        "true_label": "PORT_SCAN",
+        "record_id": "C024161",
+        "final_class": "BENIGN",
+        "decision": "BLOCK",
+        "evidence_status": "UNCERTAIN",
+        "rationale": "Agent 1 classified the flow as BENIGN (confidence 0.9429). Agent 2 gave it an unusualness score of 0.999 (more unusual than 99.9% of held-out normal flows; an unusualness percentile, not an attack probability) and flagged it as anomalous (threshold 0.970). Main deviating features: min_seg_size_forward, Fwd Header Length, Bwd Header Length. Agent 1's confidence is below the 0.99 floor, so the classification is uncertain; handled fail-safe (BLOCK)."
+      }
+    ],
+    "attack_over_normal": [
+      {
+        "true_label": "BRUTE_FORCE",
+        "record_id": "C263619",
+        "final_class": "BRUTE_FORCE",
+        "decision": "BLOCK",
+        "evidence_status": "DISAGREEMENT",
+        "rationale": "Agent 1 classified the flow as BRUTE_FORCE (confidence 0.9997). Agent 2 gave it an unusualness score of 0.951 (more unusual than 95.1% of held-out normal flows; an unusualness percentile, not an attack probability) and did not flag it (threshold 0.970). Agent 2 did not flag it, but an anomaly detector's 'normal' does not rule out an attack (it misses some slow/low-volume attacks), so Agent 1's confident BRUTE_FORCE classification stands: BLOCK."
+      },
+      {
+        "true_label": "BRUTE_FORCE",
+        "record_id": "C305878",
+        "final_class": "BRUTE_FORCE",
+        "decision": "BLOCK",
+        "evidence_status": "DISAGREEMENT",
+        "rationale": "Agent 1 classified the flow as BRUTE_FORCE (confidence 0.9999). Agent 2 gave it an unusualness score of 0.846 (more unusual than 84.6% of held-out normal flows; an unusualness percentile, not an attack probability) and did not flag it (threshold 0.970). Agent 2 did not flag it, but an anomaly detector's 'normal' does not rule out an attack (it misses some slow/low-volume attacks), so Agent 1's confident BRUTE_FORCE classification stands: BLOCK."
+      }
+    ]
+  },
+  "timing": {
+    "agent1_s": 7.077,
+    "agent2_s": 12.913,
+    "agent3_s": 1.275,
+    "total_ms_per_flow": 0.1862
+  },
+  "single_flow_latency": {
+    "n": 100,
+    "p50_ms": 5.664,
+    "p99_ms": 8.861
+  },
+  "deterministic_rerun": true,
+  "peak_rss_mb": 1439.3
+}

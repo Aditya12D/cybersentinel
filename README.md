@@ -5,7 +5,7 @@ Multi-agent network intrusion detection on CICIDS2017 (5 classes).
 ## Setup
 ```bash
 uv venv -p 3.13 .venv && uv pip install -p .venv/bin/python -r requirements.txt
-# put the participant pack at data/Cyber/{training,eval}/flows.parquet (gitignored)
+# put the participant pack at data/raw/{training,eval}/flows.parquet (gitignored; both agents read it)
 ```
 
 ## Agent 1 — Threat Detection (`agents/threat_detection.py`)
@@ -133,3 +133,40 @@ Forest alone 0.286, and the fused model 0.993.
 - False positives concentrate in long-lived benign HTTPS/HTTP sessions (port 443 FPR 8.5%; port 53 FPR 0.08%).
 - Misses are slow, long DoS flows scoring just under the threshold (median score 0.966).
 - Agent 2 is most useful exactly where Agent 1 is a low-confidence BENIGN. Treat `data_quality.reliable == false` with caution.
+
+## Agent 3 — Evidence Fusion (`src/agents/evidence_fusion.py`) + pipeline (`run_pipeline.py`)
+
+Deterministic, rule-based fusion of Agent 1 and Agent 2 (no LLM, no model, no randomness). Both
+agents' outputs are validated strictly first; Agent 2 can never supply or change an attack class,
+an Agent 2 "normal" never downgrades an Agent 1 attack, and invalid evidence never yields ALLOW.
+
+```bash
+python -m src.agents.anomaly_detection.train   # once: Agent 2 model is not in git (~10 s)
+python run_pipeline.py                         # eval set -> outputs/pipeline_report.json (+ per-flow csv/jsonl, gitignored)
+python run_pipeline.py --input hidden/flows.parquet   # any flows file; labels optional
+python -m pytest tests -q                      # Agents 1 + 2 + 3, unit + end-to-end
+```
+```python
+from src.agents.evidence_fusion import fuse, fuse_batch
+fuse(predict_threat(flow), detect_anomaly(flow), record_id=flow["record_id"])
+```
+
+| rule | condition | final_class | decision | evidence_status |
+|---|---|---|---|---|
+| invalid_threat_evidence | Agent 1 missing / raised / malformed | UNKNOWN | BLOCK | INVALID_EVIDENCE |
+| invalid_anomaly_evidence | Agent 2 missing / raised / malformed | Agent 1 class | BLOCK | INVALID_EVIDENCE |
+| unreliable_anomaly | Agent 2 `data_quality.reliable == false` | Agent 1 class | BLOCK | UNCERTAIN |
+| low_confidence | Agent 1 confidence < 0.99 | Agent 1 class | BLOCK | UNCERTAIN |
+| attack_agreement | attack + anomalous | Agent 1 class | BLOCK | AGREEMENT |
+| attack_over_normal | attack + normal | Agent 1 class | BLOCK | DISAGREEMENT |
+| benign_over_anomaly | confident BENIGN + anomalous | BENIGN | ALLOW (`needs_review`) | DISAGREEMENT |
+| benign_agreement | confident BENIGN + normal | BENIGN | ALLOW | AGREEMENT |
+
+`needs_review` is true for every status except AGREEMENT (the internal "REVIEW" flag; the policy output
+stays ALLOW/BLOCK). All thresholds and their training-only justification are in `FusionConfig`.
+An experimental Bayes escalation rule exists but is **off by default** (fired on 1 of 248,888
+training-only out-of-fold rows — not enough evidence to enable).
+
+**Eval set (n = 114,185; no fusion rule was tuned on it):** final macro-F1 0.99998 (same 2 PORT_SCAN
+rows as Agent 1, both now **BLOCKed** as UNCERTAIN), 0 false ALLOW, 1 false BLOCK, 2,088 flows flagged
+for review. Throughput 0.19 ms/flow in batch; 5.7 ms p50 for a single flow through all three agents.
