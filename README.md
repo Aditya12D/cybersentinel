@@ -237,7 +237,8 @@ Flow: A1 + A2 → A3 for every record (each flow scored from its own features on
 may lead A5 to create a policy for **later** records. No labels, no future records.
 
 - **Agent 4 — Temporal Correlation** (`src/agents/temporal_correlation.py`). A flow is suspicious when
-  A3 recommends BLOCK; *strong* when A1 and A2 agree it is an attack. Suspicious flows from one source
+  A3 recommends BLOCK; *strong* when A1 predicts an attack class and A2 independently flags the flow
+  as anomalous (A2 measures unusualness; it never classifies attacks). Suspicious flows from one source
   join a group while consecutive flows are ≤ 300 s apart (`day` + `time_offset` → real timestamp; days
   never merge). Group output: id, members, seq range, destinations, ports, protocols, A3 classes,
   time span, pattern (`SINGLE_FLOW` / `REPEATED_PAIR` / `MULTI_DESTINATION` / `MULTI_PORT_ACTIVITY`) and

@@ -21,7 +21,7 @@
   "time_window_seconds": 0.0,
   "pattern": "SINGLE_FLOW",
   "evidence_strength": "MEDIUM",
-  "evidence": "1 suspicious flow(s) from 172.16.0.1 (1 with Agent 1/2 agreement) to 1 destination(s), 1 port(s), seq 14-14 over 0 s"
+  "evidence": "1 suspicious flow(s) from 172.16.0.1 (1 where Agent 1 predicted an attack and Agent 2 flagged it anomalous) to 1 destination(s), 1 port(s), seq 14-14 over 0 s"
  },
  {
   "group_id": "G002",
@@ -45,6 +45,6 @@
   "time_window_seconds": 0.0,
   "pattern": "SINGLE_FLOW",
   "evidence_strength": "MEDIUM",
-  "evidence": "1 suspicious flow(s) from 172.16.0.1 (1 with Agent 1/2 agreement) to 1 destination(s), 1 port(s), seq 115-115 over 0 s"
+  "evidence": "1 suspicious flow(s) from 172.16.0.1 (1 where Agent 1 predicted an attack and Agent 2 flagged it anomalous) to 1 destination(s), 1 port(s), seq 115-115 over 0 s"
  }
 ]

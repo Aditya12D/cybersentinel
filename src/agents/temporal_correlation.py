@@ -9,7 +9,8 @@ endpoints and a time window. It never decides ALLOW/BLOCK; Agent 5 does.
 
 Replay safety: ``observe`` rejects out-of-order or duplicate records, keeps only past
 state, and never reads labels. A flow is *suspicious* when Agent 3 recommends BLOCK;
-it is *strong* when both Agents 1 and 2 agree it is an attack (rule attack_agreement).
+it is *strong* when Agent 1 predicts an attack class and Agent 2 independently flags the flow as
+anomalous (Agent 3 rule attack_agreement). Agent 2 never classifies attacks; it measures unusualness.
 
 Per suspicious flow it also proposes the policy window (portal: A4 outputs activation and expiry
 index): activation_index = this record's seq (a policy may only start on the next record),
@@ -135,7 +136,7 @@ class TemporalCorrelator:
             "protocols": sorted(p for p in g["_protos"] if p is not None),
             "agent3_classes": dict(g["_classes"]), "time_window_seconds": span,
             "pattern": pattern, "evidence_strength": strength,
-            "evidence": (f"{n} suspicious flow(s) from {g['source_ip']} ({strong} with Agent 1/2 agreement) to "
+            "evidence": (f"{n} suspicious flow(s) from {g['source_ip']} ({strong} where Agent 1 predicted an attack and Agent 2 flagged it anomalous) to "
                          f"{dsts} destination(s), {ports} port(s), seq {g['first_seq']}-{g['last_seq']}"
                          + (f" over {span:.0f} s" if span is not None else "")),
         }
