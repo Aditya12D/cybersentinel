@@ -11,6 +11,12 @@ Replay safety: ``observe`` rejects out-of-order or duplicate records, keeps only
 state, and never reads labels. A flow is *suspicious* when Agent 3 recommends BLOCK;
 it is *strong* when both Agents 1 and 2 agree it is an attack (rule attack_agreement).
 
+Per suspicious flow it also proposes the policy window (portal: A4 outputs activation and expiry
+index): activation_index = this record's seq (a policy may only start on the next record),
+expiry_index = seq + policy_window_records. Agent 5 decides whether to enact it and with what scope.
+Destination-side correlation: destination_fan_in = distinct suspicious sources that hit the same
+destination within the window (MULTI_SOURCE_TARGET when >= 3, e.g. distributed attacks).
+
 Evidence strength of the group a suspicious flow joins:
   HIGH    >= min_group_flows suspicious flows in the window, at least one strong
   MEDIUM  one strong flow, or >= min_group_flows weak flows
@@ -32,10 +38,15 @@ class CorrelationConfig:
     stay in the same group. 300 s is an a-priori choice (a scan / brute-force / DoS burst is
     seconds-to-minutes); it could not be validated on labelled data because the training pack
     has no IPs or timestamps.
-    min_group_flows: suspicious flows needed before weak evidence alone counts as MEDIUM."""
+    min_group_flows: suspicious flows needed before weak evidence alone counts as MEDIUM.
+    policy_window_records: length of the proposed policy window in records (100 mirrors the
+    organiser's example P0001: F000012 -> F000112).
+    multi_source_min: distinct suspicious sources on one destination to flag MULTI_SOURCE_TARGET."""
 
     window_seconds: float = 300.0
     min_group_flows: int = 2
+    policy_window_records: int = 100
+    multi_source_min: int = 3
 
 
 def flow_timestamp(day, time_offset) -> datetime | None:
@@ -57,6 +68,7 @@ class TemporalCorrelator:
         self.last_seq = 0
         self.seen: set[str] = set()
         self.open: dict[str, dict] = {}       # source_ip -> current group
+        self.targets: dict[str, list] = {}    # destination_ip -> recent (timestamp, source_ip)
         self.groups: list[dict] = []          # every group ever formed (for logs / demo)
 
     def observe(self, flow: Mapping, a3: Mapping) -> dict:
@@ -92,7 +104,14 @@ class TemporalCorrelator:
         g["_classes"][a3.get("final_class")] += 1
         g["_strong"] += a3.get("rule") in STRONG_RULES
         snap = self._snapshot(g)
-        return {**base, "group_id": g["group_id"], "evidence_strength": snap["evidence_strength"], "group": snap}
+        recent = [(t, sip) for t, sip in self.targets.get(dst, [])
+                  if t is not None and ts is not None and (ts - t).total_seconds() <= self.cfg.window_seconds]
+        self.targets[dst] = recent + [(ts, src)]
+        fan_in = len({sip for _, sip in self.targets[dst]})
+        return {**base, "group_id": g["group_id"], "evidence_strength": snap["evidence_strength"], "group": snap,
+                "activation_index": seq, "expiry_index": seq + self.cfg.policy_window_records,
+                "destination_fan_in": fan_in,
+                "destination_pattern": "MULTI_SOURCE_TARGET" if fan_in >= self.cfg.multi_source_min else None}
 
     def _snapshot(self, g: dict) -> dict:
         n, strong = len(g["member_records"]), g["_strong"]

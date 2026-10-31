@@ -242,9 +242,13 @@ may lead A5 to create a policy for **later** records. No labels, no future recor
   never merge). Group output: id, members, seq range, destinations, ports, protocols, A3 classes,
   time span, pattern (`SINGLE_FLOW` / `REPEATED_PAIR` / `MULTI_DESTINATION` / `MULTI_PORT_ACTIVITY`) and
   evidence strength: HIGH (≥ 2 flows incl. a strong one), MEDIUM (one strong flow, or ≥ 2 weak flows),
-  LOW (one weak flow). Rejects out-of-order and duplicate records.
-- **Agent 5 — Adaptive Defense** (`src/agents/adaptive_defense.py`). HIGH/MEDIUM evidence creates a
-  BLOCK policy activated after the trigger record (exclusive) for the next 100 records (inclusive).
+  LOW (one weak flow). Per suspicious flow it also reports **destination fan-in** (distinct suspicious
+  sources hitting the same destination in the window; `MULTI_SOURCE_TARGET` at ≥ 3) and proposes the
+  **policy window** — activation index = this record, expiry index = +100 records — as the portal's
+  system map assigns to A4. Rejects out-of-order and duplicate records.
+- **Agent 5 — Adaptive Defense** (`src/agents/adaptive_defense.py`). HIGH/MEDIUM evidence enacts A4's
+  proposed window as a BLOCK policy: active from the record after the trigger (exclusive) through the
+  expiry record (inclusive).
   Scope: `SRC_DST_PAIR` while the evidence involves one destination and one port (narrowest — keeps the
   source's other traffic), `SOURCE_IP` once it spans several ports or hosts. A single weak flow never
   blocks. BLOCK reports the smallest matching policy id; ALLOW reports `NONE`.
@@ -254,3 +258,11 @@ may lead A5 to create a policy for **later** records. No labels, no future recor
 Trade-offs: the first flow of each campaign is always allowed (a policy can only affect later records);
 the 100-record TTL keeps policies temporary at the cost of one re-trigger flow per expiry; 300 s / 100
 records are a-priori values — the labelled training pack has no IPs or timestamps to validate them on.
+
+**Nothing is IP-specific.** No IP address or record ID is hardcoded. Renaming every source and destination
+IP in the hidden set (e.g. 172.16.0.1 → 10.99.99.99) gives identical ALLOW/BLOCK decisions and classes for
+all 200 records and the same policies at the same records, only naming the new addresses — tested in
+`tests/test_level2.py::test_hidden_replay_is_valid_and_deterministic` (and a model-free version). Agents 4–5
+were built on Day 2 after the unlabelled hidden records were released; there are no labels, decisions use
+only earlier records, and the replay is identical for time windows of 60–3600 s and for SOURCE_IP vs
+SRC_DST_PAIR scope, so the result comes from Agents 1–3's evidence rather than tuning to the hidden set.

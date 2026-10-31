@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 
 from level2 import replay_loop
-from src.agents.adaptive_defense import AdaptiveDefense, DefenseConfig
+from src.agents.adaptive_defense import AdaptiveDefense
 from src.agents.temporal_correlation import CorrelationConfig, TemporalCorrelator, flow_timestamp
 from validate_submission import validate
 
@@ -99,10 +99,33 @@ def test_agent3_conflict_is_not_suspicious_and_uncertain_needs_corroboration(): 
     assert len(run([F(1), F(2), F(3, src="10.9.9.9")], [WEAK, WEAK, NORMAL])[1]) == 1
 
 
+def test_agent4_proposes_policy_window_and_destination_fan_in():
+    c = TemporalCorrelator(CorrelationConfig(policy_window_records=7))
+    r1 = c.observe(F(1, src="10.0.0.1"), STRONG)
+    assert (r1["activation_index"], r1["expiry_index"], r1["destination_fan_in"]) == (1, 8, 1)
+    c.observe(F(2, src="10.0.0.2"), STRONG)
+    r3 = c.observe(F(3, src="10.0.0.3"), WEAK)
+    assert r3["destination_fan_in"] == 3 and r3["destination_pattern"] == "MULTI_SOURCE_TARGET"
+    far = c.observe(F(4, src="10.0.0.4", t="59:00.0"), WEAK)                          # others out of window
+    assert far["destination_fan_in"] == 1 and far["destination_pattern"] is None
+
+
+def test_decisions_do_not_depend_on_ip_values():
+    flows = [F(1, port=53), F(2), F(3, src="10.0.0.7"), F(4), F(5, port=23), F(6)]
+    a3s = [NORMAL, STRONG, WEAK, STRONG, WEAK, STRONG]
+    ren = {"10.0.0.9": "203.0.113.5", "10.0.0.50": "198.51.100.1", "10.0.0.7": "192.0.2.77"}
+    moved = [{**f, "source_ip": ren.get(f["source_ip"], f["source_ip"]),
+              "destination_ip": ren.get(f["destination_ip"], f["destination_ip"])} for f in flows]
+    a, la, _ = run(flows, a3s)
+    b, lb, _ = run(moved, a3s)
+    assert a == b and [p["policy_id"] for p in la] == [p["policy_id"] for p in lb]
+    assert lb[0]["scope_value"].startswith("203.0.113.5")
+
+
 # --------------------------------------------------------------- Agent 5 + replay rules
 def test_expiry_inclusive_then_reanalysed():
     flows = [F(i) for i in range(1, 7)]
-    acts, led, _ = run(flows, [STRONG] * 6, def_cfg=DefenseConfig(ttl_records=3))
+    acts, led, _ = run(flows, [STRONG] * 6, corr_cfg=CorrelationConfig(policy_window_records=3))
     assert led[0]["expires_after_record_id"] == "F000004"
     assert acts == [("ALLOW", "NONE"), ("BLOCK", "P0001"), ("BLOCK", "P0001"), ("BLOCK", "P0001"),
                     ("ALLOW", "NONE"), ("BLOCK", "P0002")]                         # F5 re-analysed -> P0002
@@ -123,9 +146,9 @@ def test_no_policy_after_last_record():
 def test_prefix_replay_never_depends_on_future_records():
     flows = [F(1, port=22), F(2), F(3, src="10.0.0.7"), F(4), F(5, port=23), F(6), F(7, src="10.0.0.7"), F(8)]
     a3s = [WEAK, NORMAL, STRONG, WEAK, WEAK, STRONG, STRONG, NORMAL]
-    full, _, _ = run(flows, a3s, def_cfg=DefenseConfig(ttl_records=100))
+    full, _, _ = run(flows, a3s, corr_cfg=CorrelationConfig(policy_window_records=100))
     for k in range(1, len(flows) + 1):
-        assert run(flows[:k], a3s[:k], def_cfg=DefenseConfig(ttl_records=100))[0] == full[:k]
+        assert run(flows[:k], a3s[:k], corr_cfg=CorrelationConfig(policy_window_records=100))[0] == full[:k]
 
 
 # --------------------------------------------------------------- validator
@@ -167,3 +190,9 @@ def test_hidden_replay_is_valid_and_deterministic():
     cls, rep, pol, _ = out1
     assert len(cls) == len(rep) == len(recs) == 200
     assert validate(recs, cls.astype(str), rep, pol) == []
+    # renaming every source/destination IP changes no decision (nothing is IP-specific)
+    ips = pd.unique(pd.concat([recs.source_ip, recs.destination_ip]))
+    moved = recs.replace({ip: f"10.250.{i // 250}.{i % 250 + 1}" for i, ip in enumerate(ips)})
+    cls2, rep2, pol2, _ = replay(moved)
+    assert rep2.action.tolist() == rep.action.tolist() and cls2.predicted_class.tolist() == cls.predicted_class.tolist()
+    assert pol2.activated_after_record_id.tolist() == pol.activated_after_record_id.tolist()

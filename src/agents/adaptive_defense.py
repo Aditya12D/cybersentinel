@@ -22,11 +22,10 @@ SOURCE_IP, DESTINATION_IP, SRC_DST_PAIR = "SOURCE_IP", "DESTINATION_IP", "SRC_DS
 
 @dataclass(frozen=True)
 class DefenseConfig:
-    """ttl_records: policy lifetime in records after its trigger (100 mirrors the organiser's
-    example P0001: F000012 -> F000112). trigger_strengths: Agent 4 evidence levels that justify
-    a policy - a single LOW (weak, uncorroborated) flow never blocks anyone."""
+    """trigger_strengths: Agent 4 evidence levels that justify enacting Agent 4's proposed window
+    as a policy - a single LOW (weak, uncorroborated) flow never blocks anyone. The window length
+    itself comes from Agent 4 (CorrelationConfig.policy_window_records)."""
 
-    ttl_records: int = 100
     trigger_strengths: tuple = ("HIGH", "MEDIUM")
 
 
@@ -62,7 +61,7 @@ class AdaptiveDefense:
         g = corr["group"]
         rid = str(flow["record_id"])
         src, dst, i = flow["source_ip"], flow["destination_ip"], self.pos[rid]
-        exp = min(i + self.cfg.ttl_records, len(self.order))
+        exp = min(i + (corr["expiry_index"] - corr["activation_index"]), len(self.order))   # A4's window
         if exp <= i:
             return None                                   # nothing later left to protect
         if g["unique_destinations"] >= 2 or g["unique_destination_ports"] >= 2:
@@ -72,7 +71,8 @@ class AdaptiveDefense:
         p = {"policy_id": f"P{len(self.policies) + 1:04d}", "activated_after_record_id": rid,
              "scope_type": scope_type, "scope_value": value, "expires_after_record_id": self.order[exp - 1],
              "policy_action": "BLOCK", "_act": i, "_exp": exp, "group_id": g["group_id"],
-             "evidence_strength": corr["evidence_strength"], "pattern": g["pattern"], "evidence": g["evidence"]}
+             "evidence_strength": corr["evidence_strength"], "pattern": g["pattern"], "evidence": g["evidence"],
+             "destination_fan_in": corr.get("destination_fan_in")}
         self.policies.append(p)
         return p
 
