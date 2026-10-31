@@ -222,3 +222,35 @@ training-only out-of-fold rows — not enough evidence to enable).
 **Eval set (n = 114,185; no fusion rule was tuned on it):** final macro-F1 0.99998 (same 2 PORT_SCAN
 rows as Agent 1, both now **BLOCKed** as UNCERTAIN), 0 false ALLOW, 1 false BLOCK, 2,088 flows flagged
 for review. Throughput 0.19 ms/flow in batch; 5.7 ms p50 for a single flow through all three agents.
+
+## Level 2 — Agents 4 + 5 and the hidden-set replay (`level2.py`)
+
+```bash
+unzip cyber-hidden.zip -d data/hidden            # -> data/hidden/Cyber/hidden/records.csv (gitignored)
+python level2.py                                 # -> outputs/level2/{classification,replay,policies}.csv + agent logs
+python validate_submission.py                    # offline copy of the portal validator -> VALID / list of problems
+python -m pytest tests -q                        # 150 tests (17 for Level 2)
+```
+
+Flow: A1 + A2 → A3 for every record (each flow scored from its own features only), then a strict
+`seq`-ordered loop: **A5 applies already-active policies first**; only ALLOWed flows reach **A4**, which
+may lead A5 to create a policy for **later** records. No labels, no future records.
+
+- **Agent 4 — Temporal Correlation** (`src/agents/temporal_correlation.py`). A flow is suspicious when
+  A3 recommends BLOCK; *strong* when A1 and A2 agree it is an attack. Suspicious flows from one source
+  join a group while consecutive flows are ≤ 300 s apart (`day` + `time_offset` → real timestamp; days
+  never merge). Group output: id, members, seq range, destinations, ports, protocols, A3 classes,
+  time span, pattern (`SINGLE_FLOW` / `REPEATED_PAIR` / `MULTI_DESTINATION` / `MULTI_PORT_ACTIVITY`) and
+  evidence strength: HIGH (≥ 2 flows incl. a strong one), MEDIUM (one strong flow, or ≥ 2 weak flows),
+  LOW (one weak flow). Rejects out-of-order and duplicate records.
+- **Agent 5 — Adaptive Defense** (`src/agents/adaptive_defense.py`). HIGH/MEDIUM evidence creates a
+  BLOCK policy activated after the trigger record (exclusive) for the next 100 records (inclusive).
+  Scope: `SRC_DST_PAIR` while the evidence involves one destination and one port (narrowest — keeps the
+  source's other traffic), `SOURCE_IP` once it spans several ports or hosts. A single weak flow never
+  blocks. BLOCK reports the smallest matching policy id; ALLOW reports `NONE`.
+- `classification.csv`: A3 final class, A2 anomaly score (benign-unusualness percentile), A3 status
+  mapped AGREEMENT→AGREE, DISAGREEMENT→CONFLICT, UNCERTAIN/INVALID_EVIDENCE→UNCERTAIN.
+
+Trade-offs: the first flow of each campaign is always allowed (a policy can only affect later records);
+the 100-record TTL keeps policies temporary at the cost of one re-trigger flow per expiry; 300 s / 100
+records are a-priori values — the labelled training pack has no IPs or timestamps to validate them on.
